@@ -9,14 +9,15 @@ import {
   BadgeInfo,
 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import { students, classes } from "../../Data/mockData";
 
 function StudentProfile() {
   const [searchParams] = useSearchParams();
   const nome = searchParams.get("nome");
+  const studentsData = JSON.parse(localStorage.getItem("students")) || [];
+  const classesData = JSON.parse(localStorage.getItem("classes")) || [];
 
-  const student = students.find((s) => s.nome === nome);
-  const turma = student ? classes.find((c) => c.id === student.turmaId) : null;
+  const student = studentsData.find((s) => s.nome === nome);
+  const turma = student ? classesData.find((c) => c.id === student.turmaId) : null;
 
   if (!student) {
     return (

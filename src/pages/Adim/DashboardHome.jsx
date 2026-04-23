@@ -5,14 +5,14 @@ function DashboardHome() {
   const clasesData = JSON.parse(localStorage.getItem("classes"));
   const studentsData = JSON.parse(localStorage.getItem("students"));
   const teachersData = JSON.parse(localStorage.getItem("teachers"));
-  
+
   const studentCount = studentsData.length;
   const teacherCount = teachersData.length;
 
-  const classesAtivas = clasesData.filter((cls) => cls.meta?.estado === "Activa" || cls.meta?.estado === "activa");
+  const classesAtivas = clasesData.filter(
+    (cls) => cls.meta?.estado === "Activa" || cls.meta?.estado === "activa",
+  );
   const classesAtivasCount = classesAtivas.length;
- 
-
 
   const stats = [
     {

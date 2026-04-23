@@ -67,7 +67,7 @@ function AdicionarTeacher() {
     }
 
     const novoEstudante = {
-      id: `std_${Date.now()}`,
+      id: `std_${Date.now().toString().slice(-3)}`,
       nome: formData.nome,
       email: formData.email,
       senha: "123456",

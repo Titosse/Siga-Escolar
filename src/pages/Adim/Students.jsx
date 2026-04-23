@@ -168,8 +168,6 @@ function Students() {
             <option value="1ª Ano">1ª Ano</option>
             <option value="2ª Ano">2ª Ano</option>
             <option value="3ª Ano">3ª Ano</option>
-            <option value="cls_001">cls_001</option>
-            <option value="cls_002">cls_002</option>
           </select>
 
           <select
@@ -179,8 +177,8 @@ function Students() {
           >
             <option value="Todos">Todos os estados</option>
             <option value="activo">Activo</option>
-            <option value="pendente">Pendente</option>
-            <option value="inactivo">Inactivo</option>
+            <option value="transferido">Transferido</option>
+            <option value="desistente">Deistente</option>
           </select>
         </div>
 

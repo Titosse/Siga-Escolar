@@ -49,10 +49,11 @@ function TeacherGrades() {
         student.id === id
           ? {
               ...student,
-              [field]: numericValue > 20 ? 20 : numericValue < 0 ? 0 : numericValue,
+              [field]:
+                numericValue > 20 ? 20 : numericValue < 0 ? 0 : numericValue,
             }
-          : student
-      )
+          : student,
+      ),
     );
   }
 
@@ -69,10 +70,10 @@ function TeacherGrades() {
 
   const totalStudents = students.length;
   const approvedCount = students.filter(
-    (student) => calcularMedia(student) >= 10
+    (student) => calcularMedia(student) >= 10,
   ).length;
   const failedCount = students.filter(
-    (student) => calcularMedia(student) < 10
+    (student) => calcularMedia(student) < 10,
   ).length;
 
   const averageClass = (
@@ -114,7 +115,6 @@ function TeacherGrades() {
   return (
     <div className="w-full bg-slate-100">
       <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
-        {/* Cabeçalho */}
         <div className="bg-white rounded-3xl shadow-sm p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-slate-800">
@@ -130,7 +130,6 @@ function TeacherGrades() {
           </button>
         </div>
 
-        {/* Filtros */}
         <div className="bg-white rounded-3xl shadow-sm p-5 flex flex-col xl:flex-row gap-4">
           <select className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56">
             <option>Seleccionar Turma</option>
@@ -160,7 +159,6 @@ function TeacherGrades() {
           />
         </div>
 
-        {/* Cards */}
         <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           {stats.map((item, index) => {
             const Icon = item.icon;
@@ -187,9 +185,7 @@ function TeacherGrades() {
           })}
         </section>
 
-        {/* Conteúdo principal */}
-        <section className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Tabela */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm p-5">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">
               Lista de Estudantes e Notas
@@ -236,7 +232,9 @@ function TeacherGrades() {
                         key={student.id}
                         className="border-b border-slate-100 hover:bg-slate-50 transition"
                       >
-                        <td className="py-4 px-4 text-slate-700">{student.id}</td>
+                        <td className="py-4 px-4 text-slate-700">
+                          {student.id}
+                        </td>
 
                         <td className="py-4 px-4 font-medium text-slate-800 whitespace-nowrap">
                           {student.nome}
@@ -275,7 +273,11 @@ function TeacherGrades() {
                             max="20"
                             value={student.trabalho}
                             onChange={(e) =>
-                              handleChange(student.id, "trabalho", e.target.value)
+                              handleChange(
+                                student.id,
+                                "trabalho",
+                                e.target.value,
+                              )
                             }
                             className="w-20 border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
                           />
@@ -317,24 +319,27 @@ function TeacherGrades() {
             </div>
           </div>
 
-          {/* Resumo lateral */}
-          <div className="bg-white rounded-3xl shadow-sm p-5">
+          <div className="bg-white rounded-3xl shadow-sm p-5 w-[1050px]">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">
               Resumo da Turma
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-auto gap-4 ">
               <div className="bg-slate-50 rounded-2xl p-4">
                 <p className="text-sm text-slate-500">Melhor Média</p>
                 <h4 className="text-xl font-bold text-green-600 mt-2">
-                  {Math.max(...students.map((student) => calcularMedia(student)))}
+                  {Math.max(
+                    ...students.map((student) => calcularMedia(student)),
+                  )}
                 </h4>
               </div>
 
               <div className="bg-slate-50 rounded-2xl p-4">
                 <p className="text-sm text-slate-500">Menor Média</p>
                 <h4 className="text-xl font-bold text-red-600 mt-2">
-                  {Math.min(...students.map((student) => calcularMedia(student)))}
+                  {Math.min(
+                    ...students.map((student) => calcularMedia(student)),
+                  )}
                 </h4>
               </div>
 

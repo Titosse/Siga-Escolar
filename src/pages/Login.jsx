@@ -7,12 +7,16 @@ import { users } from "../Data/mockData";
 function Login() {
   const navigate = useNavigate();
 
+  const studentsData = JSON.parse(localStorage.getItem("students")) || [];
+  const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
+  const adminsData = JSON.parse(localStorage.getItem("admins")) || [];
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   function userCadastrado(Email, Senha) {
-    const userFound = users.find((user) => {
+    const userFound = [...studentsData, ...teachersData, ...adminsData, ...users].find((user) => {
       if (user.email === Email && user.senha === Senha) {
         return true;
       }

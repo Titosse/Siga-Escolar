@@ -14,6 +14,9 @@ function Classes() {
     localStorage.setItem("classes", JSON.stringify(dados));
   }, [dados]);
 
+  const teachersData = JSON.parse(localStorage.getItem("teachers"));
+  const alunosData = JSON.parse(localStorage.getItem("students")) || [];
+
   const [openModal, setOpenModal] = useState(false);
 
   const [openConf, setOpenConf] = useState(false);
@@ -26,6 +29,9 @@ function Classes() {
 
   const [editarClasse, setEditarClasse] = useState(null);
   const [editarModal, setEditarModal] = useState(false);
+
+  const [infoClasse, setInfoClasse] = useState(null);
+  const [infoModal, setInfoModal] = useState(false);
 
   const filteredClasses = dados.filter((classe) => {
     const nomeMatch = (classe.nome || "")
@@ -144,8 +150,7 @@ function Classes() {
           >
             <option value="Todos">Todos os estados</option>
             <option value="Activa">Activa</option>
-            <option value="Pendente">Pendente</option>
-            <option value="Inactiva">Inactiva</option>
+            <option value="Encerrada">Encerrada</option>
           </select>
         </div>
 
@@ -166,71 +171,87 @@ function Classes() {
             </thead>
 
             <tbody>
-              {filteredClasses.map((item) => (
-                <tr
-                  key={item.id}
-                  className="border-b border-slate-100 hover:bg-slate-50 transition"
-                >
-                  <td className="py-4 px-4 text-slate-700">{item.id}</td>
-                  <td className="py-4 px-4 font-medium text-slate-800">
-                    {item.nome}
-                  </td>
-                  <td className="py-4 px-4 text-slate-700">
-                    {item.info?.classe || "N/A"}
-                  </td>
-                  <td className="py-4 px-4 text-slate-700">
-                    {item.info?.turno || "N/A"}
-                  </td>
-                  <td className="py-4 px-4 text-slate-700">
-                    {item.info?.sala || "N/A"}
-                  </td>
-                  <td className="py-4 px-4 text-slate-700">
-                    {item.responsavel || "N/A"}
-                  </td>
-                  <td className="py-4 px-4 text-slate-700">
-                    {item.relacoes?.estudantes?.join(", ") || "N/A"}
-                  </td>
-                  <td className="py-4 px-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        item.meta?.estado === "Activa" ||
-                        item.meta?.estado === "activa"
-                          ? "bg-green-100 text-green-700"
-                          : item.meta?.estado === "Pendente"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {item.meta?.estado || "N/A"}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4">
-                    <div className="flex gap-2">
-                      <button className="px-3 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition">
-                        Ver
-                      </button>
-                      <button
-                        onClick={() => {
-                          setEditarClasse(item);
-                          setEditarModal(true);
-                        }}
-                        className="px-3 py-2 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition"
+              {filteredClasses.map((item) => {
+                const professsoresDaturma = teachersData.find(
+                  (teacher) => teacher.id === item.responsavel,
+                );
+
+                const alunosDaturma = alunosData.filter(
+                  (aluno) => aluno.turmaId === item.id,
+                );
+
+                return (
+                  <tr
+                    key={item.id}
+                    className="border-b border-slate-100 hover:bg-slate-50 transition"
+                  >
+                    <td className="py-4 px-4 text-slate-700">{item.id}</td>
+                    <td className="py-4 px-4 font-medium text-slate-800">
+                      {item.nome}
+                    </td>
+                    <td className="py-4 px-4 text-slate-700">
+                      {item.info?.classe || "N/A"}
+                    </td>
+                    <td className="py-4 px-4 text-slate-700">
+                      {item.info?.turno || "N/A"}
+                    </td>
+                    <td className="py-4 px-4 text-slate-700">
+                      {item.info?.sala || "N/A"}
+                    </td>
+                    <td className="py-4 px-4 text-slate-700">
+                      {professsoresDaturma.nome}
+                    </td>
+                    <td className="py-4 px-4 text-slate-700">
+                      {alunosDaturma.length > 0 ? alunosDaturma.length : "N/A"}
+                    </td>
+                    <td className="py-4 px-4">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          item.meta?.estado === "Activa" ||
+                          item.meta?.estado === "activa"
+                            ? "bg-green-100 text-green-700"
+                            : item.meta?.estado === "Pendente"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
+                        }`}
                       >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => {
-                          setClasseRemove(item);
-                          setOpenConf(true);
-                        }}
-                        className="px-3 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
-                      >
-                        Remover
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        {item.meta?.estado || "N/A"}
+                      </span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            setInfoClasse(item);
+                            setInfoModal(true);
+                          }}
+                          className="px-3 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+                        >
+                          Ver
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditarClasse(item);
+                            setEditarModal(true);
+                          }}
+                          className="px-3 py-2 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => {
+                            setClasseRemove(item);
+                            setOpenConf(true);
+                          }}
+                          className="px-3 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
+                        >
+                          Remover
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
               {filteredClasses.length === 0 && (
                 <tr>
                   <td
@@ -289,6 +310,15 @@ function Classes() {
           />
         )}
 
+        {infoModal && infoClasse && (
+          <InfoClasses
+            classe={infoClasse}
+            onClose={() => {
+              setInfoModal(false);
+              setInfoClasse(null);
+            }}
+          />
+        )}
         <div className="bg-white rounded-2xl shadow-sm p-4 mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-600">
             A mostrar <span className="font-semibold">1-4</span> de{" "}

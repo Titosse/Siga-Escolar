@@ -6,26 +6,51 @@ import {
   PlusSquare,
   CheckCheck,
 } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function TeacherDashboard() {
+  const [tasksData, setTasksData] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || [],
+  );
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasksData));
+  }, [tasksData]);
+  const classesData = JSON.parse(localStorage.getItem("classes")) || [];
+  const studentsData = JSON.parse(localStorage.getItem("students")) || [];
+  const teacherData = JSON.parse(localStorage.getItem("teachers")) || [];
+
+  const [searchParams] = useSearchParams();
+  const nome = searchParams.get("nome");
+
+  const teacherAndSearchParams = teacherData.find((tch) => tch.nome.trim() === nome.trim());
+
+  const teacherAndClasses = teacherAndSearchParams
+    ? teacherAndSearchParams.turmaIds
+    : [];
+
+    console.log("Dados do professor:", teacherAndSearchParams);
+    console.log("Turmas do professor:", teacherAndClasses);
+    console.log(nome)
   const stats = [
     {
       title: "Turmas",
-      value: "4",
+      value: teacherAndClasses.length,
       icon: BookOpenCheck,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
     },
     {
       title: "Estudantes",
-      value: "138",
+      value: studentsData.length,
       icon: Users,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
     },
     {
       title: "Tarefas Activas",
-      value: "7",
+      value: tasksData.filter((task) => !task.completed).length,
       icon: ClipboardList,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
@@ -57,27 +82,6 @@ function TeacherDashboard() {
       disciplina: "Matemática",
       estudantes: 36,
       proximaAula: "Amanhã, 08:00",
-    },
-  ];
-
-  const tasks = [
-    {
-      titulo: "Ficha de Exercícios - Equações",
-      turma: "8ª Classe A",
-      prazo: "10 Abr 2026",
-      estado: "Activa",
-    },
-    {
-      titulo: "Trabalho sobre Frações",
-      turma: "9ª Classe B",
-      prazo: "12 Abr 2026",
-      estado: "Activa",
-    },
-    {
-      titulo: "Avaliação Mensal",
-      turma: "10ª Classe A",
-      prazo: "15 Abr 2026",
-      estado: "Pendente",
     },
   ];
 
@@ -170,14 +174,13 @@ function TeacherDashboard() {
         </section>
 
         <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-
           <div className="bg-white rounded-3xl shadow-sm p-5">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">
               Tarefas Recentes
             </h3>
 
             <div className="space-y-4">
-              {tasks.map((task, index) => (
+              {tasksData.map((task, index) => (
                 <div
                   key={index}
                   className="bg-slate-50 rounded-2xl p-4 border border-slate-200"
@@ -210,7 +213,6 @@ function TeacherDashboard() {
             </div>
           </div>
 
-          {/* Painel de notas */}
           <div className="bg-white rounded-3xl shadow-sm p-5">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">
               Pendências de Notas

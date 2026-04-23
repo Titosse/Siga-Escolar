@@ -63,7 +63,7 @@ function AdicionarClasses() {
     }
 
     const novaTurma = {
-      id: `cls_${Date.now().toString().slice(0,3)}`,
+      id: `cls_${Date.now().toString().slice(-3)}`,
       nome: formData.nome,
       info: {
         classe: formData.classe,

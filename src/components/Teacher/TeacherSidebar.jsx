@@ -1,18 +1,29 @@
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 function Sidebar() {
   const location = useLocation();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const nome = searchParams.get("nome");
   const categoria = searchParams.get("categoria");
 
   const menu = [
     { name: "Dashboard", path: `/teacher?nome=${nome}&categoria=${categoria}` },
-    { name: "Notas", path: `/teacher/grades?nome=${nome}&categoria=${categoria}` },
-    { name: "Tarefas", path: `/teacher/tasks?nome=${nome}&categoria=${categoria}` },
-    { name: "Presenças", path: `/teacher/attendance?nome=${nome}&categoria=${categoria}` },
-    { name: "Relatórios", path: `/teacher/relatorios?nome=${nome}&categoria=${categoria}` },
+    {
+      name: "Notas",
+      path: `/teacher/grades?nome=${nome}&categoria=${categoria}`,
+    },
+    {
+      name: "Tarefas",
+      path: `/teacher/tasks?nome=${nome}&categoria=${categoria}`,
+    },
+    {
+      name: "Presenças",
+      path: `/teacher/attendance?nome=${nome}&categoria=${categoria}`,
+    },
+    {
+      name: "Relatórios",
+      path: `/teacher/relatorios?nome=${nome}&categoria=${categoria}`,
+    },
   ];
 
   return (
@@ -21,9 +32,7 @@ function Sidebar() {
 
       <nav className="space-y-3">
         {menu.map((item) => {
-          const active =
-            location.pathname === item.path ||
-            (item.path === "/dashboard" && location.pathname === "/dashboard");
+         const active = location.pathname === item.path.split("?")[0]
 
           return (
             <Link

@@ -63,7 +63,6 @@ function TeacherAttendance() {
   return (
     <div className="w-full bg-slate-100">
       <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
-        {/* Cabeçalho */}
         <div className="bg-white rounded-3xl shadow-sm p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-slate-800">
@@ -79,7 +78,6 @@ function TeacherAttendance() {
           </button>
         </div>
 
-        {/* Filtros */}
         <div className="bg-white rounded-3xl shadow-sm p-5 flex flex-col xl:flex-row gap-4">
           <select className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56">
             <option>Seleccionar Turma</option>
@@ -107,7 +105,6 @@ function TeacherAttendance() {
           />
         </div>
 
-        {/* Cards */}
         <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           {stats.map((item, index) => {
             const Icon = item.icon;
@@ -134,10 +131,8 @@ function TeacherAttendance() {
           })}
         </section>
 
-        {/* Conteúdo principal */}
-        <section className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Tabela */}
-          <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm p-5">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="md:col-span-2 bg-white rounded-3xl shadow-sm p-5">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">
               Lista de Presença
             </h3>
@@ -226,35 +221,34 @@ function TeacherAttendance() {
             </div>
           </div>
 
-          {/* Resumo lateral */}
-          <div className="bg-white rounded-3xl shadow-sm p-5">
+          <div className="bg-white rounded-3xl shadow-sm p-5 w-[900px]">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">
               Resumo da Aula
             </h3>
 
-            <div className="space-y-4">
-              <div className="bg-slate-50 rounded-2xl p-4">
+            <div className="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+              <div className="bg-slate-100 rounded-2xl p-4">
                 <p className="text-sm text-slate-500">Taxa de Presença</p>
                 <h4 className="text-xl font-bold text-green-600 mt-2">
                   {((presentes / totalStudents) * 100).toFixed(0)}%
                 </h4>
               </div>
 
-              <div className="bg-slate-50 rounded-2xl p-4">
+              <div className="bg-slate-100 rounded-2xl p-4">
                 <p className="text-sm text-slate-500">Taxa de Faltas</p>
                 <h4 className="text-xl font-bold text-red-600 mt-2">
                   {((faltas / totalStudents) * 100).toFixed(0)}%
                 </h4>
               </div>
 
-              <div className="bg-slate-50 rounded-2xl p-4">
+              <div className="bg-slate-100 rounded-2xl p-4">
                 <p className="text-sm text-slate-500">Taxa de Atraso</p>
                 <h4 className="text-xl font-bold text-yellow-600 mt-2">
                   {((atrasados / totalStudents) * 100).toFixed(0)}%
                 </h4>
               </div>
 
-              <div className="bg-slate-50 rounded-2xl p-4">
+              <div className="bg-slate-100 rounded-2xl h-22 p-4">
                 <p className="text-sm text-slate-500">Observação</p>
                 <h4 className="text-base font-semibold text-slate-800 mt-2">
                   Aula com boa presença geral

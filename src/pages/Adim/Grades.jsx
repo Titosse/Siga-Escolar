@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import { subjects } from "../../Data/mockData";
 
 function Grades() {
   const [students, setStudents] = useState([
@@ -54,6 +55,8 @@ function Grades() {
       exame: 17,
     },
   ]);
+
+  const classesData = JSON.parse(localStorage.getItem("classes")); 
 
   function handleChange(id, field, value) {
     const numericValue = Number(value);
@@ -136,7 +139,7 @@ function Grades() {
   return (
     <div className="w-full bg-slate-100">
       <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
-        {/* Cabeçalho */}
+
         <div className="bg-white rounded-3xl shadow-sm p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-slate-800">
@@ -152,20 +155,24 @@ function Grades() {
           </button>
         </div>
 
-        {/* Filtros */}
         <div className="bg-white rounded-3xl shadow-sm p-5 flex flex-col xl:flex-row gap-4">
           <select className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56">
-            <option>Seleccionar Turma</option>
-            <option>8ª Classe A</option>
-            <option>8ª Classe B</option>
-            <option>9ª Classe A</option>
+           <option>Seleccionar Turma</option>
+            {classesData.map((cls) => (
+              <option key={cls.id} value={cls.id}>
+                {cls.nome}
+              </option>
+            ))}
           </select>
 
           <select className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56">
+            
             <option>Seleccionar Disciplina</option>
-            <option>Matemática</option>
-            <option>Português</option>
-            <option>Ciências Naturais</option>
+            {subjects.map((subject) => (
+              <option key={subject.id} value={subject.id}>
+                {subject.info.nome}
+              </option>
+            ))}
           </select>
 
           <select className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56">
@@ -182,7 +189,6 @@ function Grades() {
           />
         </div>
 
-        {/* Cards */}
         <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           {stats.map((item, index) => {
             const Icon = item.icon;
@@ -209,7 +215,6 @@ function Grades() {
           })}
         </section>
 
-        {/* Gráfico + resumo lateral */}
         <section className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm p-5">
             <div className="flex items-center justify-between mb-4">
@@ -285,10 +290,9 @@ function Grades() {
           </div>
         </section>
 
-        {/* Tabela */}
         <div className="bg-white rounded-3xl shadow-sm p-5">
           <div className="w-full overflow-x-auto">
-            <table className="w-full min-w-[950px] border-collapse">
+            <table className="w-full min-w-[900px] border-collapse">
               <thead>
                 <tr className="text-left border-b border-slate-200">
                   <th className="py-3 px-4 text-slate-600 whitespace-nowrap">
@@ -409,7 +413,6 @@ function Grades() {
           </div>
         </div>
 
-        {/* Paginação visual */}
         <div className="bg-white rounded-3xl shadow-sm p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-600 text-center sm:text-left">
             A mostrar <span className="font-semibold">1-5</span> de{" "}

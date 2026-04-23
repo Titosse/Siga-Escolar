@@ -171,38 +171,226 @@ export const classes = [
 
 export const subjects = [
   {
-    id: "sub_001",
+  id: "sub_001",
+
+  info: {
     nome: "Matemática",
     codigo: "MAT-01",
-    teacherIds: ["tch_001"],
-    turmaIds: ["cls_001"],
+    cargaHoraria: 5,
   },
-  {
-    id: "sub_002",
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_002",
+
+  info: {
     nome: "Português",
     codigo: "POR-01",
-    teacherIds: ["tch_002"],
-    turmaIds: ["cls_001"],
+    cargaHoraria: 5,
   },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_003",
+
+  info: {
+    nome: "Ciências Naturais",
+    codigo: "CIE-01",
+    cargaHoraria: 5,
+  },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_004",
+
+  info: {
+    nome: "História",
+    codigo: "HIS-01",
+    cargaHoraria: 5,
+  },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_005",
+
+  info: {
+    nome: "Língua Inglesa",
+    codigo: "ING-01",
+    cargaHoraria: 5,
+  },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_006",
+
+  info: {
+    nome: "Ciências Sociais",
+    codigo: "SOC-01",
+    cargaHoraria: 5,
+  },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_007",
+
+  info: {
+    nome: "Educação Física",
+    codigo: "EDF-01",
+    cargaHoraria: 5,
+  },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_008",
+
+  info: {
+    nome: "Artes",
+    codigo: "ART-01",
+    cargaHoraria: 5,
+  },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_009",
+
+  info: {
+    nome: "Educação Moral e Cívica",
+    codigo: "MOR-01",
+    cargaHoraria: 5,
+  },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+{
+  id: "sub_010",
+
+  info: {
+    nome: "Tecnologia",
+    codigo: "TEC-01",
+    cargaHoraria: 5,
+  },
+
+  relacoes: {
+    professores: ["tch_001"],
+    turmas: ["cls_001"],
+  },
+
+  meta: {
+    estado: "activa",
+    createdAt: "2026-04-11",
+  },
+},
+  
 ];
 
-export const grades = [
-  {
-    id: "grd_001",
+export const grades = [{
+  id: "grd_001",
+
+  relacoes: {
     studentId: "std_001",
     teacherId: "tch_001",
     turmaId: "cls_001",
     disciplinaId: "sub_001",
-    periodo: "1º Trimestre",
+  },
+
+  periodo: "1º Trimestre",
+
+  notas: {
     teste1: 14,
     teste2: 15,
     trabalho: 16,
     exame: 13,
+  },
+
+  resultado: {
     media: 14.5,
     estado: "aprovado",
+  },
+
+  meta: {
     createdAt: "2026-04-11",
   },
-];
+}]
 
 export const attendances = [
   {
