@@ -4,6 +4,7 @@ import {
   Clock3,
   AlertCircle,
   PlusSquare,
+  Search,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import AdicionarTarefa from "../../components/Teacher/Task/AdicionarTask";
@@ -18,7 +19,7 @@ function TeacherTasks() {
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
- }, [tasks]);
+  }, [tasks]);
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -28,12 +29,37 @@ function TeacherTasks() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [editTask, setEditTask] = useState(null);
 
+  const [search, setSearch] = useState("");
+  const [selectedTurma, setSelectedTurma] = useState("Todas as turmas");
+  const [selectedEstado, setSelectedEstado] = useState("Todos");
+  const [selectedDisciplina, setSelectedDisciplina] = useState(
+    "Todas as disciplinas",
+  );
+
   function handleRemoveTasks(id) {
     const updatedTasks = tasks.filter((task) => task.id !== id);
     setTasks(updatedTasks);
     setOpenConf(false);
     setTaskToRemove(null);
   }
+
+  const filteredTasks = tasks.filter((task) => {
+    const stutMacth = (task.estado || "")
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const turmaMatch =
+      selectedTurma === "Todas as turmas" || task.turma === selectedTurma;
+
+    const estadoMatch =
+      selectedEstado === "Todos" || task.estado === selectedEstado;
+
+    const disciplinaMatch =
+      selectedDisciplina === "Todas as disciplinas" ||
+      task.disciplina === selectedDisciplina;
+
+    return stutMacth && turmaMatch && estadoMatch && disciplinaMatch;
+  });
 
   const totalTasks = tasks.length;
   const activeTasks = tasks.filter((task) => task.estado === "Activa").length;
@@ -167,24 +193,38 @@ function TeacherTasks() {
           <input
             type="text"
             placeholder="Pesquisar tarefa..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="flex-1 border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 min-w-0"
           />
 
-          <select className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56">
+          <select
+            value={selectedTurma}
+            onChange={(e) => setSelectedTurma(e.target.value)}
+            className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56"
+          >
             <option>Todas as turmas</option>
-            <option>8ª Classe A</option>
-            <option>9ª Classe B</option>
-            <option>10ª Classe A</option>
+            <option>1ª Ano A</option>
+            <option>2ª Ano B</option>
+            <option>3ª Ano A</option>
           </select>
 
-          <select className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56">
-            <option>Todos os estados</option>
-            <option>Activa</option>
-            <option>Pendente</option>
-            <option>Concluída</option>
+          <select
+            value={selectedEstado}
+            onChange={(e) => setSelectedEstado(e.target.value)}
+            className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56"
+          >
+            <option value="Todos">Todos os estados</option>
+            <option value="Activa">Activa</option>
+            <option value="Pendente">Pendente</option>
+            <option value="Encerrada">Encerrada</option>
           </select>
 
-          <select className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56">
+          <select
+            value={selectedDisciplina}
+            onChange={(e) => setSelectedDisciplina(e.target.value)}
+            className="border border-slate-300 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400 xl:w-56"
+          >
             <option>Todas as disciplinas</option>
             <option>Matemática</option>
             <option>Português</option>
@@ -253,7 +293,7 @@ function TeacherTasks() {
                 </thead>
 
                 <tbody>
-                  {tasks.map((task) => (
+                  {filteredTasks.map((task) => (
                     <tr
                       key={task.id}
                       className="border-b border-slate-100 hover:bg-slate-50 transition"
@@ -283,7 +323,9 @@ function TeacherTasks() {
                               ? "bg-green-100 text-green-700"
                               : task.estado === "Pendente"
                                 ? "bg-yellow-100 text-yellow-700"
-                                : "bg-purple-100 text-purple-700"
+                                : task.estado === "Encerrada"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-purple-100 text-purple-700"
                           }`}
                         >
                           {task.estado}
@@ -351,7 +393,9 @@ function TeacherTasks() {
                         ? "bg-green-100 text-green-700"
                         : task.estado === "Pendente"
                           ? "bg-yellow-100 text-yellow-700"
-                          : "bg-purple-100 text-purple-700"
+                          : task.estado === "Encerrada"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-purple-100 text-purple-700"
                     }`}
                   >
                     {task.estado}

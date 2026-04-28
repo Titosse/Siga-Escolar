@@ -160,7 +160,7 @@ function Classes() {
               <tr className="text-left border-b border-slate-200">
                 <th className="py-3 px-4 text-slate-600">ID</th>
                 <th className="py-3 px-4 text-slate-600">Turma</th>
-                <th className="py-3 px-4 text-slate-600">Classe</th>
+                <th className="py-3 px-4 text-slate-600">Ano</th>
                 <th className="py-3 px-4 text-slate-600">Turno</th>
                 <th className="py-3 px-4 text-slate-600">Sala</th>
                 <th className="py-3 px-4 text-slate-600">Director</th>

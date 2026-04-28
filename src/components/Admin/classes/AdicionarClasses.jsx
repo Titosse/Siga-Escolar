@@ -62,6 +62,11 @@ function AdicionarClasses() {
       return;
     }
 
+    if (classes.some((cls) => cls.nome.toLowerCase().trim() === formData.nome.toLowerCase().trim() && cls.info.classe.toLowerCase().trim() === formData.classe.toLowerCase().trim())) {
+      alert("Já existe uma turma com este nome. Escolha outro nome.");
+      return;
+    }
+
     const novaTurma = {
       id: `cls_${Date.now().toString().slice(-3)}`,
       nome: formData.nome,

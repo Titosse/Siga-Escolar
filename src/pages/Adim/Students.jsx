@@ -63,7 +63,7 @@ function Students() {
       .toLowerCase()
       .includes(search.toLowerCase());
 
-    const classeStudent = student.classe || student.turmaId || "";
+    const classeStudent = student.ano || "";
     const estadoStudent = (student.estado || "").toLowerCase();
 
     const classeMatch =
@@ -209,7 +209,7 @@ function Students() {
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">
-                    {student.classe || student.turmaId || "Sem turma"}
+                    {student.ano || "Sem ano"}
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">

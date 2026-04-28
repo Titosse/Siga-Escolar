@@ -7,6 +7,8 @@ import {
   MapPin,
   Users,
   HeartHandshake,
+  GraduationCap,
+  VenusAndMars,
 } from "lucide-react";
 import { students as mockStudents } from "../../../Data/mockData";
 
@@ -17,16 +19,24 @@ function AdicionarTeacher() {
   });
 
   const [formData, setFormData] = useState({
+    id: ``,
     nome: "",
-    dataNascimento: "",
-    genero: "",
     email: "",
+    senha: "123456",
+    categoria: "Estudante",
+    avatar: "",
     telefone: "",
+    genero: "",
+    dataNascimento: "",
     morada: "",
+    codigoAluno: "",
+    ano: "",
     turmaId: "",
-    nomeEncarregado: "",
-    telefoneEncarregado: "",
-    parentesco: "",
+    encarregado: {
+      nome: "",
+      telefone: "",
+      parentesco: "",
+    },
   });
 
   useEffect(() => {
@@ -41,6 +51,13 @@ function AdicionarTeacher() {
       [name]: value,
     }));
   }
+
+  const classesData = JSON.parse(localStorage.getItem("classes")) || [];
+  const turmas = classesData.map((cls) => ({
+    id: cls.id,
+    nome: cls.nome,
+    info: cls.info,
+  }));
 
   function gerarNovoCodigo(lista) {
     const numero = lista.length + 1;
@@ -58,9 +75,10 @@ function AdicionarTeacher() {
       !formData.telefone.trim() ||
       !formData.morada.trim() ||
       !formData.turmaId.trim() ||
-      !formData.nomeEncarregado.trim() ||
-      !formData.telefoneEncarregado.trim() ||
-      !formData.parentesco.trim()
+      !formData.ano.trim() ||
+      !formData.encarregado.nome.trim() ||
+      !formData.encarregado.telefone.trim() ||
+      !formData.encarregado.parentesco.trim()
     ) {
       alert("Preencha todos os campos.");
       return;
@@ -79,10 +97,11 @@ function AdicionarTeacher() {
       morada: formData.morada,
       codigoAluno: gerarNovoCodigo(students),
       turmaId: formData.turmaId,
+      ano: formData.ano,
       encarregado: {
-        nome: formData.nomeEncarregado,
-        telefone: formData.telefoneEncarregado,
-        parentesco: formData.parentesco,
+        nome: formData.encarregado.nome,
+        telefone: formData.encarregado.telefone,
+        parentesco: formData.encarregado.parentesco,
       },
       estado: "activo",
       createdAt: new Date().toISOString().slice(0, 10),
@@ -99,9 +118,12 @@ function AdicionarTeacher() {
       telefone: "",
       morada: "",
       turmaId: "",
-      nomeEncarregado: "",
-      telefoneEncarregado: "",
-      parentesco: "",
+      ano: "",
+      encarregado: {
+        nome: "",
+        telefone: "",
+        parentesco: "",
+      },
     });
 
     alert("Estudante adicionado com sucesso.");
@@ -144,28 +166,18 @@ function AdicionarTeacher() {
 
           <div>
             <label className="text-sm text-slate-600">Género</label>
-            <div className="flex items-center gap-4 mt-2">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="genero"
-                  value="Masculino"
-                  checked={formData.genero === "Masculino"}
-                  onChange={handleChange}
-                />
-                Masculino
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="genero"
-                  value="Feminino"
-                  checked={formData.genero === "Feminino"}
-                  onChange={handleChange}
-                />
-                Feminino
-              </label>
+            <div className="relative mt-1">
+              <VenusAndMars className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+              <select
+                name="genero"
+                value={formData.genero}
+                onChange={handleChange}
+                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
+              >
+                <option value="">Selecionar género</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+              </select>
             </div>
           </div>
 
@@ -215,17 +227,40 @@ function AdicionarTeacher() {
           </div>
 
           <div>
+            <label className="text-sm text-slate-600">Ano</label>
+            <div className="relative mt-1">
+              <GraduationCap className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+              <select
+                name="ano"
+                value={formData.ano}
+                onChange={handleChange}
+                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
+              >
+                <option value="">Selecionar ano</option>
+                <option value="1ª Ano">1ª Ano</option>
+                <option value="2ª Ano">2ª Ano</option>
+                <option value="3ª Ano">3ª Ano</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
             <label className="text-sm text-slate-600">Turma</label>
             <div className="relative mt-1">
               <Users className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
+              <select
                 name="turmaId"
                 value={formData.turmaId}
                 onChange={handleChange}
-                placeholder="Ex: cls_001"
                 className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
+              >
+                <option value="">Selecionar turma</option>
+                {turmas.map((turma) => (
+                  <option key={turma.id} value={turma.id}>
+                    {turma.info.classe}-{turma.nome}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

@@ -131,7 +131,7 @@ function TeacherDashboard() {
               Minhas Turmas
             </h3>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[900px] border-collapse">
+              <table className="w-full min-w-[950px] border-collapse">
                 <thead>
                   <tr className="text-left border-b border-slate-200">
                     <th className="py-3 px-4 text-slate-600">Turma</th>

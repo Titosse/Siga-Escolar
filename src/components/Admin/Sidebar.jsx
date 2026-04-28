@@ -22,6 +22,10 @@ function Sidebar() {
       path: `/admin/classes?nome=${nome}&categoria=${categoria}`,
     },
     {
+      name: "Disciplinas",
+      path: `/admin/subjects?nome=${nome}&categoria=${categoria}`,
+    },
+    {
       name: "Notas",
       path: `/admin/grades?nome=${nome}&categoria=${categoria}`,
     },

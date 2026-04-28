@@ -1,7 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Users, CheckCircle2, XCircle, BookOpen } from "lucide-react";
 
 function TeacherGrades() {
+  const [grades, setGrades] = useState(() => {
+    const savedTasks = localStorage.getItem("grades");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("grades", JSON.stringify(grades));
+  }, [grades]);
+
   const [students, setStudents] = useState([
     {
       id: 1,

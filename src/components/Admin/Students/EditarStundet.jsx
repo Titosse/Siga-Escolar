@@ -6,6 +6,7 @@ import {
   MapPin,
   Users,
   HeartHandshake,
+  GraduationCap,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -19,12 +20,20 @@ function EditarStudent({ student, onClose, onSave }) {
     telefone: student.telefone || "",
     morada: student.morada || "",
     turmaId: student.turmaId || "",
+    ano: student.ano || "",
     encarregado: {
       nome: student.encarregado?.nome || "",
       telefone: student.encarregado?.telefone || "",
       parentesco: student.encarregado?.parentesco || "",
     },
   });
+
+  const classesData = JSON.parse(localStorage.getItem("classes")) || [];
+  const turmas = classesData.map((cls) => ({
+    id: cls.id,
+    nome: cls.nome,
+    info: cls.info,
+  }));
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -188,17 +197,40 @@ function EditarStudent({ student, onClose, onSave }) {
             </div>
 
             <div>
+              <label className="text-sm text-slate-600">Ano</label>
+              <div className="relative mt-1">
+                <GraduationCap className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <select
+                name="ano"
+                value={formData.ano}
+                onChange={handleChange}
+                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
+              >
+                <option value="">Selecionar ano</option>
+                <option value="1ª Ano">1ª Ano</option>
+                <option value="2ª Ano">2ª Ano</option>
+                <option value="3ª Ano">3ª Ano</option>
+              </select>
+              </div>
+            </div>
+
+            <div>
               <label className="text-sm text-slate-600">Turma</label>
               <div className="relative mt-1">
                 <Users className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
-                  name="turmaId"
-                  value={formData.turmaId}
-                  onChange={handleChange}
-                  placeholder="Ex: cls_001"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
+                <select
+                name="turmaId"
+                value={formData.turmaId}
+                onChange={handleChange}
+                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
+              >
+                <option value="">Selecionar turma</option>
+                {turmas.map((turma) => (
+                  <option key={turma.id} value={turma.id}>
+                    {turma.info.classe}-{turma.nome}
+                  </option>
+                ))}
+              </select>
               </div>
             </div>
           </div>

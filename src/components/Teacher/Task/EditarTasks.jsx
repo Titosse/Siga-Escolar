@@ -56,8 +56,9 @@ function EditarTarefa({ tarefa, onClose, onUpdate }) {
             onChange={handleChange}
             className="w-full border p-3 rounded-xl"
           >
-            <option value="activa">Activa</option>
-            <option value="encerrada">Encerrada</option>
+            <option value="Activa">Activa</option>
+            <option value="Encerrada">Encerrada</option>
+            <option value="Pendente">Pendente</option>
           </select>
 
           <div className="flex justify-end gap-2">

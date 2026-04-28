@@ -432,15 +432,16 @@ export const taskSubmissions = [
 ];
 
 export const db = {
-  admins: [admin],
-  teachers: [teacher],
-  students: [students],
-  classes: [classes],
-  subjects: [subjects],
-  grades: [grades],
-  attendance: [attendances],
-  tasks: [tasks],
-  taskSubmissions: [taskSubmissions],
+  users: [],
+  students: [],
+  teachers: [],
+  classes: [],
+  subjects: [],
+  grades: [],
+  attendance: [],
+  tasks: [],
+  taskSubmissions: [],
+  reports: [],
 };
 
 const dados = JSON.parse(localStorage.getItem("db"));

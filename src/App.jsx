@@ -23,6 +23,7 @@ import AlunoRelatorios from "./pages/Aluno/AlunoRelatorios";
 import Perfil from "./pages/Aluno/Perfile";
 import Conta from "./components/Admin/Conta";
 import DadosDaEscola from "./components/Admin/DadosDaEscola";
+import Subjects from "./pages/Adim/Subject";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
           <Route index element={<DashboardHome />} />
           <Route path="students" element={<Students />} />
           <Route path="teachers" element={<Teachers />} />
+          <Route path="subjects" element={<Subjects />} />
           <Route path="classes" element={<Classes />} />
           <Route path="grades" element={<Grades />} />
           <Route path="reports" element={<Reports />} />

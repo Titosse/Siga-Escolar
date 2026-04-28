@@ -5,21 +5,45 @@ import {
   Phone,
   MapPin,
   Users,
-  HeartHandshake,
+  VenusAndMars,
 } from "lucide-react";
 import { useState } from "react";
 
 function EditarTeacher({ teacher, onClose, onSave }) {
-  const [formData, setFormData] = useState({
-    id: teacher.id,
-    nome: teacher.nome || "",
-    dataNascimento: teacher.dataNascimento || "",
-    genero: teacher.genero || "",
-    email: teacher.email || "",
-    telefone: teacher.telefone || "",
-    morada: teacher.morada || "",
-    turmaId: teacher.turmaId || "",
-  });
+ const [formData, setFormData] = useState({
+  id: teacher.id,
+  nome: teacher.nome || "",
+  dataNascimento: teacher.dataNascimento || "",
+  genero: teacher.genero || "",
+  email: teacher.email || "",
+  telefone: teacher.telefone || "",
+  morada: teacher.morada || "",
+  disciplinaIds: teacher.disciplinaIds || [],
+  turmaId: teacher.turmaId || "",
+  turmaIds: teacher.turmaIds || [],
+});
+
+  function handleDisciplinaChange(e) {
+    const { value, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      disciplinaIds: checked
+        ? [...(prev.disciplinaIds || []), value]
+        : (prev.disciplinaIds || []).filter((id) => id !== value),
+    }));
+  }
+
+  function handleTurmaChange(e) {
+    const { value, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      turmaIds: checked
+        ? [...(prev.turmaIds || []), value]
+        : (prev.turmaIds || []).filter((id) => id !== value),
+    }));
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -45,6 +69,19 @@ function EditarTeacher({ teacher, onClose, onSave }) {
     console.log("Dados atualizados do professor:", updatedTeacher);
     onClose();
   }
+
+  const subjectsData = JSON.parse(localStorage.getItem("subjects")) || [];
+  const disciplinas = subjectsData.map((sub) => ({
+    id: sub.id,
+    nome: sub.info?.nome || sub.nome || "Sem nome",
+  }));
+
+  const classesData = JSON.parse(localStorage.getItem("classes")) || [];
+  const turmas = classesData.map((cls) => ({
+    id: cls.id,
+    nome: cls.nome,
+    info: cls.info,
+  }));
 
   return (
     <div className="w-full fixed inset-0 bg-black/40 flex items-start justify-center z-50 p-4 overflow-y-auto">
@@ -97,28 +134,18 @@ function EditarTeacher({ teacher, onClose, onSave }) {
 
             <div>
               <label className="text-sm text-slate-600">Género</label>
-              <div className="flex items-center gap-4 mt-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="genero"
-                    value="Masculino"
-                    checked={formData.genero === "Masculino"}
-                    onChange={handleChange}
-                  />
-                  Masculino
-                </label>
-
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="genero"
-                    value="Feminino"
-                    checked={formData.genero === "Feminino"}
-                    onChange={handleChange}
-                  />
-                  Feminino
-                </label>
+              <div className="relative mt-1">
+                <VenusAndMars className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <select
+                  name="genero"
+                  value={formData.genero}
+                  onChange={handleChange}
+                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
+                >
+                  <option value="">Selecionar género</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Feminino">Feminino</option>
+                </select>
               </div>
             </div>
 
@@ -168,17 +195,65 @@ function EditarTeacher({ teacher, onClose, onSave }) {
             </div>
 
             <div>
-              <label className="text-sm text-slate-600">Turma</label>
+              <label className="text-sm text-slate-600">
+                Turma Responsavel
+              </label>
               <div className="relative mt-1">
                 <Users className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
+                <select
                   name="turmaId"
                   value={formData.turmaId}
                   onChange={handleChange}
-                  placeholder="Ex: cls_001"
                   className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
+                >
+                  <option value="">Selecionar turma</option>
+                  {turmas.map((turma) => (
+                    <option key={turma.id} value={turma.id}>
+                      {turma.info.classe}-{turma.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm text-slate-600">
+                Turmas a leccionar
+              </label>
+              <div className="mt-2 space-y-2">
+                {turmas.map((turma) => (
+                  <label key={turma.id} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      value={turma.id}
+                      checked={formData.turmaIds.includes(turma.id)}
+                      onChange={handleTurmaChange}
+                    />
+                    {turma.info?.classe || "Sem classe"} - {turma.nome}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm text-slate-600">Disciplina(s)</label>
+              <div className="mt-2 space-y-2">
+                {disciplinas.map((disciplina) => (
+                  <label
+                    key={disciplina.id}
+                    className="flex items-center gap-2"
+                  >
+                    <input
+                      type="checkbox"
+                      value={disciplina.id}
+                      checked={formData.disciplinaIds.includes(disciplina.id)}
+                      onChange={handleDisciplinaChange}
+                    />
+                    {disciplina.nome}
+                  </label>
+                ))}
               </div>
             </div>
           </div>

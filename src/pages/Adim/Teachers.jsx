@@ -34,12 +34,20 @@ function Teachers() {
     localStorage.setItem("teachers", JSON.stringify(dados));
   }, [dados]);
 
-  function getTeacherDisciplina(teacher) {
-    if (teacher.disciplina) return teacher.disciplina;
+  const subjectsData = JSON.parse(localStorage.getItem("subjects")) || [];
+  const disciplinasDisponiveis = [
+    "Todas",
+    ...new Set(
+      subjectsData
+        .map((subject) => subject.info?.nome || subject.nome || "Sem nome")
+        .filter(Boolean),
+    ),
+  ];
 
+  function getTeacherDisciplina(teacher) {
     if (teacher.disciplinaIds && teacher.disciplinaIds.length > 0) {
       const nomes = teacher.disciplinaIds
-        .map((id) => subjects.find((subject) => subject.id === id)?.nome)
+        .map((id) => subjects.find((subject) => subject.id === id)?.info.nome)
         .filter(Boolean);
 
       return nomes.length > 0 ? nomes.join(", ") : "Sem disciplina";
@@ -76,12 +84,14 @@ function Teachers() {
     return nomeMatch && disciplinaMatch && estadoMatch;
   });
 
-  const disciplinasDisponiveis = [
-    "Todas",
-    ...new Set(
-      dados.map((teacher) => getTeacherDisciplina(teacher)).filter(Boolean),
-    ),
-  ];
+  function encotrarDisciplinaId(disciplinaId) {
+    const disc = disciplinaId.map((id) => {
+      const disciplina = subjects.find((sub) => sub.id === id);
+      return disciplina ? disciplina.info?.nome : "Sem nome";
+    });
+
+    return disc.join(", ");
+  }
 
   function saveEditedTeacher(updatedTeacher) {
     const updatedTeachers = dados.map((teacher) =>
@@ -179,7 +189,10 @@ function Teachers() {
             className="border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400"
           >
             {disciplinasDisponiveis.map((disciplina) => (
-              <option key={disciplina} value={disciplina}>
+              <option
+                key={disciplina}
+                value={disciplina.info?.nome || disciplina.nome || disciplina}
+              >
                 {disciplina === "Todas" ? "Todas as disciplinas" : disciplina}
               </option>
             ))}
@@ -198,7 +211,7 @@ function Teachers() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-5 mt-6 overflow-x-auto">
-          <table className="w-full min-w-[700px] border-collapse">
+          <table className="w-full min-w-[900px] border-collapse">
             <thead>
               <tr className="text-left border-b border-slate-200">
                 <th className="py-3 px-4 text-slate-600">ID</th>
@@ -224,7 +237,7 @@ function Teachers() {
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">
-                    {getTeacherDisciplina(teacher)}
+                    {encotrarDisciplinaId(teacher.disciplinaIds)}
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">

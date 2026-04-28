@@ -6,10 +6,34 @@ function InfoTeacher({ teacher, onClose }) {
       )
     : "N/A";
 
+  const subjectsData = JSON.parse(localStorage.getItem("subjects")) || [];
+  const classesData = JSON.parse(localStorage.getItem("classes")) || [];
+
+  const disciplinas = subjectsData.map((sub) => ({
+    id: sub.id,
+    nome: sub.info?.nome || sub.nome || "Sem nome",
+  }));
+
+  const turmas = classesData.map((cls) => ({
+    id: cls.id,
+    nome: cls.nome,
+    info: cls.info,
+  }));
+
+  const turmaResponsavel = turmas.find((turma) => turma.id === teacher.turmaId);
+
+  const turmasLeccionadas = turmas.filter((turma) =>
+    (teacher.turmaIds || []).includes(turma.id),
+  );
+
+  const disciplinasProfessor = disciplinas.filter((disciplina) =>
+    (teacher.disciplinaIds || []).includes(disciplina.id),
+  );
+
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/40 flex items-start justify-center z-50 p-4 overflow-y-auto">
       <div
-        className="bg-white rounded-2xl w-full max-w-3xl p-6 relative"
+        className="bg-white rounded-2xl w-full max-w-4xl p-6 relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -19,59 +43,110 @@ function InfoTeacher({ teacher, onClose }) {
           X
         </button>
 
-        <h2 className="text-xl font-bold text-slate-800 mb-4">
+        <h2 className="text-xl font-bold text-slate-800 mb-6">
           Informações do Professor
         </h2>
 
-        <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-slate-600">
-              ID
-            </label>
-            <p className="text-lg font-semibold text-slate-800">{teacher.id}</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <InfoItem className="" label="ID" value={teacher.id} />
+          <InfoItem
+            className=""
+            label="Código do Funcionário"
+            value={teacher.codigoFuncionario}
+          />
+          <InfoItem label="Nome" value={teacher.nome} />
+          <InfoItem label="Email" value={teacher.email} />
+          <InfoItem label="Telefone" value={teacher.telefone} />
+          <InfoItem label="Género" value={teacher.genero} />
+          <InfoItem label="Data de nascimento" value={teacher.dataNascimento} />
+          <InfoItem label="Idade" value={idade} />
+          <InfoItem label="Morada" value={teacher.morada} />
 
           <div>
             <label className="block text-sm font-medium text-slate-600">
-              Nome
-            </label>
-            <p className="text-lg  font-semibold text-slate-800">
-              {teacher.nome}
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-600">
-              Género
+              Turma Responsável
             </label>
             <p className="text-lg font-semibold text-slate-800">
-              {teacher.genero}
+              {turmaResponsavel
+                ? `${turmaResponsavel.info?.classe || "Sem classe"} - ${turmaResponsavel.nome}`
+                : "Nenhuma turma selecionada"}
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-600">
-              Idade
-            </label>
-            <p className="text-lg font-semibold text-slate-800">{idade}</p>
-          </div>
-
-          <div className="flex flex-col gap-2">
             <label className="block text-sm font-medium text-slate-600">
               Estado
             </label>
             <span
-              className={`px-3 py-1 w-24 rounded-full text-sm font-semibold ${
+              className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
                 teacher.estado === "activo" || teacher.estado === "Activo"
                   ? "bg-green-200 text-green-800"
                   : "bg-yellow-100 text-yellow-700"
               }`}
             >
-              {teacher.estado}
+              {teacher.estado || "N/A"}
             </span>
+          </div>
+
+          <InfoItem label="Criado em" value={teacher.createdAt} />
+          <InfoItem label="Actualizado em" value={teacher.updatedAt} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <div>
+            <label className="block text-sm font-medium text-slate-600 mb-2">
+              Turmas a leccionar
+            </label>
+
+            <div className="flex flex-wrap gap-2">
+              {turmasLeccionadas.length > 0 ? (
+                turmasLeccionadas.map((turma) => (
+                  <span
+                    key={turma.id}
+                    className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm font-medium"
+                  >
+                    {turma.info?.classe || "Sem classe"} - {turma.nome}
+                  </span>
+                ))
+              ) : (
+                <p className="text-slate-500">Nenhuma turma selecionada</p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-600 mb-2">
+              Disciplinas
+            </label>
+
+            <div className="flex flex-wrap gap-2">
+              {disciplinasProfessor.length > 0 ? (
+                disciplinasProfessor.map((disciplina) => (
+                  <span
+                    key={disciplina.id}
+                    className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm font-medium"
+                  >
+                    {disciplina.nome}
+                  </span>
+                ))
+              ) : (
+                <p className="text-slate-500">Nenhuma disciplina selecionada</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function InfoItem({ label, value, className }) {
+  return (
+    <div className={className}>
+      <label className="block text-sm font-medium text-slate-600">
+        {label}
+      </label>
+      <p className="text-lg font-semibold text-slate-800">{value || "N/A"}</p>
     </div>
   );
 }
