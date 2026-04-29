@@ -14,8 +14,9 @@ function Classes() {
     localStorage.setItem("classes", JSON.stringify(dados));
   }, [dados]);
 
-  const teachersData = JSON.parse(localStorage.getItem("teachers"));
-  const alunosData = JSON.parse(localStorage.getItem("students")) || [];
+  const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
+  const studentsData = JSON.parse(localStorage.getItem("students")) || [];
+  const subjectsData = JSON.parse(localStorage.getItem("subjects")) || [];
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -155,7 +156,7 @@ function Classes() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-5 mt-6 overflow-x-auto">
-          <table className="w-full min-w-[700px] border-collapse">
+          <table className="w-full min-w-[900px] border-collapse">
             <thead>
               <tr className="text-left border-b border-slate-200">
                 <th className="py-3 px-4 text-slate-600">ID</th>
@@ -176,7 +177,7 @@ function Classes() {
                   (teacher) => teacher.id === item.responsavel,
                 );
 
-                const alunosDaturma = alunosData.filter(
+                const alunosDaturma = studentsData.filter(
                   (aluno) => aluno.turmaId === item.id,
                 );
 

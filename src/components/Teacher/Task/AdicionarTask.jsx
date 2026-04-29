@@ -6,7 +6,7 @@ import {
   CalendarDays,
   Link as LinkIcon,
   ClipboardCheck,
-  Trophy,
+  Trophy, 
 } from "lucide-react";
 
 function AdicionarTarefa({ onClose, onAddTask }) {
@@ -211,7 +211,6 @@ function AdicionarTarefa({ onClose, onAddTask }) {
           </div>
         </div>
 
-        {/* Botões */}
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             type="button"

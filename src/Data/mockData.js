@@ -145,252 +145,281 @@ export const students = [
 
 export const classes = [
   {
-  id: "cls_001",
-  nome: "8ª Classe A",
+    id: "cls_001",
+    nome: "8ª Classe A",
 
-  info: {
-    classe: "8ª Classe",
-    turno: "Manhã",
-    sala: "Sala 03",
+    info: {
+      classe: "8ª Classe",
+      turno: "Manhã",
+      sala: "Sala 03",
+    },
+
+    relacoes: {
+      estudantes: ["std_001"],
+      professores: ["tch_001"],
+      disciplinas: ["sub_001"],
+    },
+
+    responsavel: "tch_001",
+
+    meta: {
+      anoLectivo: "2026",
+      estado: "activa",
+    },
   },
+];
 
-  relacoes: {
-    estudantes: ["std_001"],
-    professores: ["tch_001"],
-    disciplinas: ["sub_001"],
+const disciplinas = [
+  {
+    id: "sub_001",
+
+    info: {
+      nome: "Matemática",
+      codigo: "MAT-07",
+      cargaHoraria: 5,
+      classe: "7ª Classe",
+      area: "Ciências exactas",
+      semestre: "1º Semestre",
+      anoLectivo: "2026",
+      descricao: "Disciplina focada em cálculo e raciocínio lógico.",
+    },
+
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001", "cls_002"],
+    },
+
+    meta: {
+      estado: "activo",
+      createdAt: "2026-04-29",
+      updatedAt: "2026-04-29",
+    },
   },
-
-  responsavel: "tch_001",
-
-  meta: {
-    anoLectivo: "2026",
-    estado: "activa",
-  },
-}
 ];
 
 export const subjects = [
   {
-  id: "sub_001",
+    id: "sub_001",
 
-  info: {
-    nome: "Matemática",
-    codigo: "MAT-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Matemática",
+      codigo: "MAT-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_002",
+  {
+    id: "sub_002",
 
-  info: {
-    nome: "Português",
-    codigo: "POR-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Português",
+      codigo: "POR-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_003",
+  {
+    id: "sub_003",
 
-  info: {
-    nome: "Ciências Naturais",
-    codigo: "CIE-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Ciências Naturais",
+      codigo: "CIE-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_004",
+  {
+    id: "sub_004",
 
-  info: {
-    nome: "História",
-    codigo: "HIS-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "História",
+      codigo: "HIS-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_005",
+  {
+    id: "sub_005",
 
-  info: {
-    nome: "Língua Inglesa",
-    codigo: "ING-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Língua Inglesa",
+      codigo: "ING-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_006",
+  {
+    id: "sub_006",
 
-  info: {
-    nome: "Ciências Sociais",
-    codigo: "SOC-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Ciências Sociais",
+      codigo: "SOC-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_007",
+  {
+    id: "sub_007",
 
-  info: {
-    nome: "Educação Física",
-    codigo: "EDF-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Educação Física",
+      codigo: "EDF-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_008",
+  {
+    id: "sub_008",
 
-  info: {
-    nome: "Artes",
-    codigo: "ART-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Artes",
+      codigo: "ART-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_009",
+  {
+    id: "sub_009",
 
-  info: {
-    nome: "Educação Moral e Cívica",
-    codigo: "MOR-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Educação Moral e Cívica",
+      codigo: "MOR-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-{
-  id: "sub_010",
+  {
+    id: "sub_010",
 
-  info: {
-    nome: "Tecnologia",
-    codigo: "TEC-01",
-    cargaHoraria: 5,
-  },
+    info: {
+      nome: "Tecnologia",
+      codigo: "TEC-01",
+      cargaHoraria: 5,
+    },
 
-  relacoes: {
-    professores: ["tch_001"],
-    turmas: ["cls_001"],
-  },
+    relacoes: {
+      professores: ["tch_001"],
+      turmas: ["cls_001"],
+    },
 
-  meta: {
-    estado: "activa",
-    createdAt: "2026-04-11",
+    meta: {
+      estado: "activa",
+      createdAt: "2026-04-11",
+    },
   },
-},
-  
 ];
 
-export const grades = [{
-  id: "grd_001",
+export const grades = [
+  {
+    id: "grd_001",
 
-  relacoes: {
-    studentId: "std_001",
-    teacherId: "tch_001",
-    turmaId: "cls_001",
-    disciplinaId: "sub_001",
+    relacoes: {
+      studentId: "std_001",
+      teacherId: "tch_001",
+      turmaId: "cls_001",
+      disciplinaId: "sub_001",
+    },
+
+    periodo: "1º Trimestre",
+
+    notas: {
+      teste1: 14,
+      teste2: 15,
+      trabalho: 16,
+      exame: 13,
+    },
+
+    resultado: {
+      media: 14.5,
+      estado: "aprovado",
+    },
+
+    meta: {
+      createdAt: "2026-04-11",
+    },
   },
-
-  periodo: "1º Trimestre",
-
-  notas: {
-    teste1: 14,
-    teste2: 15,
-    trabalho: 16,
-    exame: 13,
-  },
-
-  resultado: {
-    media: 14.5,
-    estado: "aprovado",
-  },
-
-  meta: {
-    createdAt: "2026-04-11",
-  },
-}]
+];
 
 export const attendances = [
   {

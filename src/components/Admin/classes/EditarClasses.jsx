@@ -50,7 +50,7 @@ function EditarStudent({ classe, onClose, onSave }) {
         professores: formData.professores.split(",").map((e) => e.trim()),
         disciplinas: formData.disciplinas.split(",").map((e) => e.trim()),
       },
-      responsavel: formData.responsavel,
+      responsavel: formData.responsavel, 
       meta: {
         anoLectivo: formData.anoLectivo,
         estado: formData.estado,

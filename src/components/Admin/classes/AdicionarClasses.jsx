@@ -54,7 +54,7 @@ function AdicionarClasses() {
       !formData.estudantes.trim() ||
       !formData.professores.trim() ||
       !formData.disciplinas.trim() ||
-      !formData.responsavel.trim() ||
+      !formData.responsavel.trim() || 
       !formData.anoLectivo.trim() ||
       !formData.estado.trim()
     ) {
@@ -175,66 +175,6 @@ function AdicionarClasses() {
                 value={formData.sala}
                 onChange={handleChange}
                 placeholder="Sala"
-                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm text-slate-600">Estudantes</label>
-            <div className="relative mt-1">
-              <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                name="estudantes"
-                value={formData.estudantes}
-                onChange={handleChange}
-                placeholder="std_001, std_002"
-                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm text-slate-600">Professores</label>
-            <div className="relative mt-1">
-              <Phone className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                name="professores"
-                value={formData.professores}
-                onChange={handleChange}
-                placeholder="tch_001, tch_002"
-                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm text-slate-600">Disciplinas</label>
-            <div className="relative mt-1">
-              <MapPin className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                name="disciplinas"
-                value={formData.disciplinas}
-                onChange={handleChange}
-                placeholder="sub_001, sub_002"
-                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm text-slate-600">Responsável</label>
-            <div className="relative mt-1">
-              <Users className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                name="responsavel"
-                value={formData.responsavel}
-                onChange={handleChange}
-                placeholder="tch_001"
                 className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
               />
             </div>

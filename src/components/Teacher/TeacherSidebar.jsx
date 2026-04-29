@@ -24,6 +24,10 @@ function Sidebar() {
       name: "Relatórios",
       path: `/teacher/relatorios?nome=${nome}&categoria=${categoria}`,
     },
+     {
+      name: "Conteudos",
+      path: `/teacher/subject?nome=${nome}&categoria=${categoria}`,
+    }
   ];
 
   return (

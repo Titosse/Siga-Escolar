@@ -24,6 +24,7 @@ import Perfil from "./pages/Aluno/Perfile";
 import Conta from "./components/Admin/Conta";
 import DadosDaEscola from "./components/Admin/DadosDaEscola";
 import Subjects from "./pages/Adim/Subject";
+import SubjectTeacher from "./pages/Teacher/Conteudos";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="tasks" element={<TeacherTasks />} />
           <Route path="attendance" element={<TeacherAttendance />} />
           <Route path="relatorios" element={<TeacherRelatorio />} />
+          <Route path="subject" element={<SubjectTeacher />} />
         </Route>
 
         <Route path="/admin" element={<DashboardLayout />}>

@@ -7,9 +7,8 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-import {
-  subjects as mockSubjects
-} from "../../Data/mockData";
+import { subjects as mockSubjects } from "../../Data/mockData";
+import AddDisciplina from "../../components/Teacher/Subjects/AddSubjects";
 
 function AdminSubjectsDashboard() {
   const [subjects, setSubjects] = useState(() => {
@@ -17,72 +16,76 @@ function AdminSubjectsDashboard() {
     return savedSubjects ? JSON.parse(savedSubjects) : mockSubjects;
   });
 
-  const teachers = JSON.parse(localStorage.getItem("teachers")) || teachers;
-  const classes = JSON.parse(localStorage.getItem("classes")) || classes;
-
-
-  const [search, setSearch] = useState("");
-  const [selectedEstado, setSelectedEstado] = useState("Todos");
-
   useEffect(() => {
     localStorage.setItem("subjects", JSON.stringify(subjects));
   }, [subjects]);
 
+  const teachers = JSON.parse(localStorage.getItem("teachers")) || teachers;
+  const classes = JSON.parse(localStorage.getItem("classes")) || classes;
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [selectedEstado, setSelectedEstado] = useState("Todos");
+
+  const [openConf, setOpenConf] = useState(false);
+  const [classeRemove, setClasseRemove] = useState(null);
+
+  function handleRemoveClass(id) {
+    const updatedClasses = subjects.filter((classe) => classe.id !== id);
+    setSubjects(updatedClasses);
+    setOpenConf(false);
+    setClasseRemove(null);
+  }
+
   function getTeachersNames(subject) {
-    const subjectTeachers = teachers.filter((teacher) =>
-      subject.teacherIds?.includes(teacher.id),
-    );
+    const subjectTeachers = teachers.filter((teacher) => {
+      return teacher.disciplinaIds?.includes(subject.id);
+    });
 
     if (subjectTeachers.length === 0) return "Sem professor";
 
     return subjectTeachers.map((teacher) => teacher.nome).join(", ");
   }
 
-  function getClassesNames(subject) {
-    const subjectClasses = classes.filter((classe) =>
-      subject.turmaIds?.includes(classe.id),
-    );
+ function teacherResponsavel(subject) {
+  const professoresIds = subject.relacoes?.professores || [];
 
-    if (subjectClasses.length === 0) return "Sem turma";
+  const nomes = teachers
+    .filter((teacher) => professoresIds.includes(teacher.id))
+    .map((teacher) => teacher.nome);
 
-    return subjectClasses.map((classe) => classe.nome).join(", ");
-  }
+  if (nomes.length === 0) return "Sem professor";
+
+  return nomes.join(", ");
+}
 
   const filteredSubjects = subjects.filter((subject) => {
-    const nomeMatch = (subject.nome || "")
+    const nomeMatch = (subject.info.nome || "")
       .toLowerCase()
       .includes(search.toLowerCase());
 
     const estadoMatch =
       selectedEstado === "Todos" ||
-      (subject.estado || "").toLowerCase() === selectedEstado.toLowerCase();
+      (subject.meta.estado || "").toLowerCase() === selectedEstado.toLowerCase();
 
     return nomeMatch && estadoMatch;
   });
 
   const totalSubjects = subjects.length;
   const activeSubjects = subjects.filter(
-    (subject) => subject.estado === "activa" || subject.estado === "Activa",
+    (subject) =>
+      subject.meta.estado === "activo" || subject.meta.estado === "activa",
   ).length;
   const inactiveSubjects = subjects.filter(
-    (subject) => subject.estado === "inactiva" || subject.estado === "Inactiva",
+    (subject) =>
+      subject.meta.estado === "inactiva" || subject.meta.estado === "Inactiva",
   ).length;
 
   const totalCargaHoraria = subjects.reduce(
-    (total, subject) => total + (Number(subject.cargaHoraria) || 0),
+    (total, subject) => total + (Number(subject.info.cargaHoraria) || 0),
     0,
   );
-
-  function handleRemoveSubject(id) {
-    const confirmar = window.confirm(
-      "Tens a certeza que queres remover esta disciplina?",
-    );
-
-    if (!confirmar) return;
-
-    const updatedSubjects = subjects.filter((subject) => subject.id !== id);
-    setSubjects(updatedSubjects);
-  }
 
   return (
     <div className="min-h-screen bg-slate-100 p-6">
@@ -97,11 +100,25 @@ function AdminSubjectsDashboard() {
             </p>
           </div>
 
-          <button className="bg-slate-900 text-white px-5 py-3 rounded-xl hover:bg-slate-800 transition flex items-center gap-2">
+          <button
+            className="bg-slate-900 text-white px-5 py-3 rounded-xl hover:bg-slate-800 transition flex items-center gap-2"
+            onClick={() => setOpenModal(true)}
+          >
             <Plus className="w-5 h-5" />
             Nova Disciplina
           </button>
         </div>
+
+        {openModal && (
+          <div className="w-full h-full fixed inset-0 bg-black/40 flex justify-center items-start z-50 overflow-y-auto p-4">
+            <AddDisciplina
+              onAddSubject={(novaDisciplina) => {
+                setSubjects((prev) => [...prev, novaDisciplina]);
+              }}
+              onClose={() => setOpenModal(false)}
+            />
+          </div>
+        )}
 
         <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <div className="bg-white rounded-2xl shadow-sm p-5 flex items-start justify-between">
@@ -171,20 +188,20 @@ function AdminSubjectsDashboard() {
             className="border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-slate-400"
           >
             <option value="Todos">Todos os estados</option>
-            <option value="activa">Activa</option>
+            <option value="activo">Activo</option>
             <option value="inactiva">Inactiva</option>
           </select>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-5 overflow-x-auto">
-          <table className="w-full min-w-[950px] border-collapse">
+          <table className="w-full min-w-[900px] border-collapse">
             <thead>
               <tr className="text-left border-b border-slate-200">
                 <th className="py-3 px-4 text-slate-600">ID</th>
                 <th className="py-3 px-4 text-slate-600">Disciplina</th>
                 <th className="py-3 px-4 text-slate-600">Código</th>
                 <th className="py-3 px-4 text-slate-600">Professores</th>
-                <th className="py-3 px-4 text-slate-600">Turmas</th>
+                <th className="py-3 px-4 text-slate-600">Classe</th>
                 <th className="py-3 px-4 text-slate-600">Carga</th>
                 <th className="py-3 px-4 text-slate-600">Estado</th>
                 <th className="py-3 px-4 text-slate-600">Acções</th>
@@ -200,35 +217,35 @@ function AdminSubjectsDashboard() {
                   <td className="py-4 px-4 text-slate-700">{subject.id}</td>
 
                   <td className="py-4 px-4 font-medium text-slate-800">
-                    {subject.nome}
+                    {subject.info.nome || "N/A"}
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">
-                    {subject.codigo || "N/A"}
+                    {subject.info.codigo || "N/A"}
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">
-                    {getTeachersNames(subject)}
+                    {teacherResponsavel(subject)}
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">
-                    {getClassesNames(subject)}
+                    {subject.info.classe}
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">
-                    {subject.cargaHoraria || 0}h
+                    {subject.info.cargaHoraria || 0}h
                   </td>
 
                   <td className="py-4 px-4">
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        subject.estado === "activa" ||
-                        subject.estado === "Activa"
+                        subject.meta.estado === "activo" ||
+                        subject.meta.estado === "Activo"
                           ? "bg-green-100 text-green-700"
                           : "bg-red-100 text-red-700"
                       }`}
                     >
-                      {subject.estado || "N/A"}
+                      {subject.meta.estado || "N/A"}
                     </span>
                   </td>
 
@@ -243,7 +260,10 @@ function AdminSubjectsDashboard() {
                       </button>
 
                       <button
-                        onClick={() => handleRemoveSubject(subject.id)}
+                        onClick={() => {
+                          setClasseRemove(subject);
+                          setOpenConf(true);
+                        }}
                         className="px-3 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition"
                       >
                         Remover
@@ -252,6 +272,39 @@ function AdminSubjectsDashboard() {
                   </td>
                 </tr>
               ))}
+
+              {openConf && classeRemove && (
+                <div className="w-full fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-4">
+                  <div className="w-full max-w-2xl p-6 flex flex-col items-center bg-white rounded-2xl">
+                    <h1 className="font-semibold text-2xl text-center">
+                      Tens a certeza que queres remover esta disciplina?
+                    </h1>
+
+                    <p className="text-slate-500 mt-2 text-center">
+                      {classeRemove.info.nome}
+                    </p>
+
+                    <div className="space-x-4 py-6">
+                      <button
+                        onClick={() => handleRemoveClass(classeRemove.id)}
+                        className="w-40 h-10 rounded-3xl text-white bg-green-400 hover:bg-green-600 transition"
+                      >
+                        Sim
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setOpenConf(false);
+                          setClasseRemove(null);
+                        }}
+                        className="w-40 h-10 rounded-3xl text-white bg-red-400 hover:bg-red-600 transition"
+                      >
+                        Não
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {filteredSubjects.length === 0 && (
                 <tr>

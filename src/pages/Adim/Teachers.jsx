@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { teacher as mockTeachers, subjects } from "../../Data/mockData";
+import { teacher as mockTeachers } from "../../Data/mockData";
 import AdicionarTeacher from "../../components/Admin/Teacher/AdicionarTeacher";
 import InfoTeacher from "../../components/Admin/Teacher/InfoTeacher";
 import EditarTeacher from "../../components/Admin/Teacher/EditarTeacher";
@@ -45,15 +45,15 @@ function Teachers() {
   ];
 
   function getTeacherDisciplina(teacher) {
-    if (teacher.disciplinaIds && teacher.disciplinaIds.length > 0) {
-      const nomes = teacher.disciplinaIds
-        .map((id) => subjects.find((subject) => subject.id === id)?.info.nome)
-        .filter(Boolean);
+    const disciplinas = subjectsData.filter((subject) =>
+      subject.relacoes?.professores?.includes(teacher.id),
+    );
 
-      return nomes.length > 0 ? nomes.join(", ") : "Sem disciplina";
-    }
+    if (disciplinas.length === 0) return "Sem disciplina";
 
-    return "Sem disciplina";
+    return disciplinas
+      .map((subject) => subject.info?.nome || "Sem nome")
+      .join(", ");
   }
 
   function handleRemoveTeacher(id) {
@@ -84,13 +84,16 @@ function Teachers() {
     return nomeMatch && disciplinaMatch && estadoMatch;
   });
 
-  function encotrarDisciplinaId(disciplinaId) {
-    const disc = disciplinaId.map((id) => {
-      const disciplina = subjects.find((sub) => sub.id === id);
-      return disciplina ? disciplina.info?.nome : "Sem nome";
-    });
+  function encontrarDisciplina(teacherId) {
+    const disciplinas = subjectsData.filter((subject) =>
+      subject.relacoes?.professores?.includes(teacherId),
+    );
 
-    return disc.join(", ");
+    if (disciplinas.length === 0) return "Sem disciplina";
+
+    return disciplinas
+      .map((subject) => subject.info?.nome || "Sem nome")
+      .join(", ");
   }
 
   function saveEditedTeacher(updatedTeacher) {
@@ -237,7 +240,7 @@ function Teachers() {
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">
-                    {encotrarDisciplinaId(teacher.disciplinaIds)}
+                    {encontrarDisciplina(teacher.id)}
                   </td>
 
                   <td className="py-4 px-4 text-slate-700">
@@ -319,7 +322,7 @@ function Teachers() {
             teacher={infoTeacher}
             onClose={() => {
               setInfoModal(false);
-              setInfoModal(null);
+              setInfoTeacher(null);
             }}
           />
         )}

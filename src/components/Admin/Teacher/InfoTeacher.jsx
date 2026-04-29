@@ -9,11 +9,6 @@ function InfoTeacher({ teacher, onClose }) {
   const subjectsData = JSON.parse(localStorage.getItem("subjects")) || [];
   const classesData = JSON.parse(localStorage.getItem("classes")) || [];
 
-  const disciplinas = subjectsData.map((sub) => ({
-    id: sub.id,
-    nome: sub.info?.nome || sub.nome || "Sem nome",
-  }));
-
   const turmas = classesData.map((cls) => ({
     id: cls.id,
     nome: cls.nome,
@@ -26,8 +21,8 @@ function InfoTeacher({ teacher, onClose }) {
     (teacher.turmaIds || []).includes(turma.id),
   );
 
-  const disciplinasProfessor = disciplinas.filter((disciplina) =>
-    (teacher.disciplinaIds || []).includes(disciplina.id),
+  const disciplinasProfessor = subjectsData.filter((disciplina) =>
+    disciplina.relacoes?.professores.includes(teacher.id),
   );
 
   return (
@@ -126,7 +121,7 @@ function InfoTeacher({ teacher, onClose }) {
                     key={disciplina.id}
                     className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm font-medium"
                   >
-                    {disciplina.nome}
+                    {disciplina.info.nome}
                   </span>
                 ))
               ) : (
