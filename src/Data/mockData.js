@@ -435,15 +435,32 @@ export const attendances = [
 
 export const tasks = [
   {
-    id: "tsk_001",
-    titulo: "Ficha de Exercícios sobre Equações",
-    descricao: "Resolver os exercícios da página 20 até 25.",
-    disciplinaId: "sub_001",
-    turmaId: "cls_001",
-    teacherId: "tch_001",
-    prazo: "2026-04-20",
-    estado: "activa",
-    createdAt: "2026-04-11",
+    id: "task_001",
+
+    info: {
+      titulo: "Lançar notas",
+      descricao: "Adicionar notas do 1º teste",
+      prioridade: "alta",
+    },
+
+    relacoes: {
+      teacherId: "tch_001",
+      turmaId: "cls_001",
+      disciplinaId: "sub_001",
+    },
+
+    periodo: "1º semestre",
+
+    estado: {
+      completed: false,
+      situacao: "pendente",
+    },
+
+    datas: {
+      prazo: "2026-05-10",
+      createdAt: "2026-05-07",
+      updatedAt: "2026-05-07",
+    },
   },
 ];
 

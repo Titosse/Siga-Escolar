@@ -324,7 +324,7 @@ function Teachers() {
               setInfoModal(false);
               setInfoTeacher(null);
             }}
-          />
+          /> 
         )}
 
         {editModal && editTeacher && (

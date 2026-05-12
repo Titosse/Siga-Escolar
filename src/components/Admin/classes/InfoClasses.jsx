@@ -5,12 +5,21 @@ import {
   Clock,
   Building2,
   BadgeInfo,
+  ClipboardList,
+  Eye,
+  X,
+  GraduationCap,
+  FilePenLine,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
-import { subjects } from "../../../Data/mockData";
+import { useState } from "react";
 
 function InfoClasse({ classe, onClose }) {
   const studentsData = JSON.parse(localStorage.getItem("students"));
   const teachersData = JSON.parse(localStorage.getItem("teachers"));
+  const subjectsData = JSON.parse(localStorage.getItem("subjects"));
+  const [tab, setTab] = useState("students");
 
   const alunosDaTurma =
     studentsData.filter((student) => classe.id === student.turmaId) || [];
@@ -20,10 +29,11 @@ function InfoClasse({ classe, onClose }) {
       classe.relacoes?.professores?.includes(teacher.id),
     ) || [];
 
-  const disciplinasDaTurma =
-    subjects.filter((subject) =>
-      classe.relacoes?.disciplinas?.includes(subject.id),
-    ) || [];
+  const disciplinasDaTurma = subjectsData.filter((subject) =>
+    subject.relacoes?.turmas.includes(classe.id),
+  );
+
+  console.log(disciplinasDaTurma);
 
   const professorResponsavel = teachersData.find(
     (teacher) => teacher.id === classe.responsavel,
@@ -46,7 +56,7 @@ function InfoClasse({ classe, onClose }) {
           Informações da Turma
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
           <div className="lg:col-span-1 space-y-4">
             <div className="bg-slate-50 rounded-2xl p-4">
               <label className="block text-sm font-medium text-slate-600">
@@ -178,91 +188,144 @@ function InfoClasse({ classe, onClose }) {
               </div>
             </div>
 
-            <div className="bg-slate-50 rounded-2xl p-4">
-              <h3 className="text-lg font-semibold text-slate-800 mb-4">
-                Estudantes da Turma
-              </h3>
+            <div className="px-4 pt-3 flex flex-wrap gap-3 border-b border-slate-200">
+              <TabButton
+                active={tab === "students"}
+                onClick={() => setTab("students")}
+                label="Estudantes"
+                icon={<Users />}
+              />
 
-              {alunosDaTurma.length > 0 ? (
-                <div className="space-y-3">
-                  {alunosDaTurma.map((student) => (
-                    <div
-                      key={student.id}
-                      className="bg-white border border-slate-200 rounded-xl p-4"
-                    >
-                      <p className="font-semibold text-slate-800">
-                        {student.nome}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        {student.codigoAluno || student.id}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        Género: {student.genero || "N/A"}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        Contacto: {student.telefone || "N/A"}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-slate-500">Nenhum estudante encontrado.</p>
-              )}
+              <TabButton
+                active={tab === "teachers"}
+                onClick={() => setTab("teachers")}
+                label="Professores"
+                icon={<BookOpen />}
+              />
+
+              <TabButton
+                active={tab === "subjects"}
+                onClick={() => setTab("subjects")}
+                label="Disciplina"
+                icon={<GraduationCap />}
+              />
             </div>
 
-            <div className="bg-slate-50 rounded-2xl p-4">
-              <h3 className="text-lg font-semibold text-slate-800 mb-4">
-                Professores ligados
-              </h3>
+            <div className="bg-slate-50 rounded-2xl p-4 max-h-[90vh] overflow-y-auto">
+              {tab === "students" && (
+                <div className="space-y-4">
+                  {alunosDaTurma.length > 0 ? (
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold text-slate-800 mb-4">
+                        Estudantes da Turma
+                      </h3>
 
-              {professoresDaTurma.length > 0 ? (
-                <div className="space-y-3">
-                  {professoresDaTurma.map((teacher) => (
-                    <div
-                      key={teacher.id}
-                      className="bg-white border border-slate-200 rounded-xl p-4"
-                    >
-                      <p className="font-semibold text-slate-800">
-                        {teacher.nome}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        {teacher.codigoFuncionario || teacher.id}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        Contacto: {teacher.telefone || "N/A"}
-                      </p>
+                      {alunosDaTurma.map((student) => (
+                        <div
+                          key={student.id}
+                          className="bg-white border border-slate-200 rounded-xl p-4"
+                        >
+                          <p className="font-semibold text-slate-800">
+                            {student.nome}
+                          </p>
+                          <p className="text-sm text-slate-500">
+                            {student.codigoAluno || student.id}
+                          </p>
+                          <p className="text-sm text-slate-500">
+                            Género: {student.genero || "N/A"}
+                          </p>
+                          <p className="text-sm text-slate-500">
+                            Contacto: {student.telefone || "N/A"}
+                          </p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <p className="text-slate-500">
+                      Nenhum estudante encontrado.
+                    </p>
+                  )}
                 </div>
-              ) : (
-                <p className="text-slate-500">Nenhum professor encontrado.</p>
               )}
-            </div>
 
-            <div className="bg-slate-50 rounded-2xl p-4">
-              <h3 className="text-lg font-semibold text-slate-800 mb-4">
-                Disciplinas da Turma
-              </h3>
+              {tab === "teachers" && (
+                <div className="bg-slate-50 rounded-2xl p-4">
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">
+                    Professores ligados
+                  </h3>
 
-              {disciplinasDaTurma.length > 0 ? (
-                <div className="flex flex-wrap gap-3">
-                  {disciplinasDaTurma.map((subject) => (
-                    <span
-                      key={subject.id}
-                      className="px-4 py-2 rounded-full bg-slate-200 text-slate-700 text-sm font-medium"
-                    >
-                      {subject.nome}
-                    </span>
-                  ))}
+                  {professoresDaTurma.length > 0 ? (
+                    <div className="space-y-3">
+                      {professoresDaTurma.map((teacher) => (
+                        <div
+                          key={teacher.id}
+                          className="bg-white border border-slate-200 rounded-xl p-4"
+                        >
+                          <p className="font-semibold text-slate-800">
+                            {teacher.nome}
+                          </p>
+                          <p className="text-sm text-slate-500">
+                            {teacher.codigoFuncionario || teacher.id}
+                          </p>
+                          <p className="text-sm text-slate-500">
+                            Contacto: {teacher.telefone || "N/A"}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-slate-500">
+                      Nenhum professor encontrado.
+                    </p>
+                  )}
                 </div>
-              ) : (
-                <p className="text-slate-500">Nenhuma disciplina encontrada.</p>
+              )}
+
+              {tab === "subjects" && (
+                <div className="bg-slate-50 rounded-2xl p-4">
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">
+                    Disciplinas da Turma
+                  </h3>
+
+                  {disciplinasDaTurma.length > 0 ? (
+                    <div className="flex flex-wrap gap-3">
+                      {disciplinasDaTurma.map((subject) => (
+                        <span
+                          key={subject.id}
+                          className="px-4 py-2 rounded-full bg-slate-200 text-slate-700 text-sm font-medium"
+                        >
+                          {subject.info.nome}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-slate-500">
+                      Nenhuma disciplina encontrada.
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function TabButton({ active, onClick, label, icon }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-5 py-3 rounded-t-2xl transition ${
+        active
+          ? "bg-slate-900 text-white"
+          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
   );
 }
 

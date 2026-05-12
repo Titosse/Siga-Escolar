@@ -34,7 +34,7 @@ function InfoTeacher({ teacher, onClose }) {
         <button
           onClick={onClose}
           className="w-8 h-8 rounded-full absolute top-4 right-4 text-white bg-slate-500 hover:bg-red-500"
-        >
+        > 
           X
         </button>
 

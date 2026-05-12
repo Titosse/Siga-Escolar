@@ -8,6 +8,7 @@ import {
   Clock,
   Building,
   HeartHandshake,
+  Layers,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -25,6 +26,9 @@ function EditarStudent({ classe, onClose, onSave }) {
     anoLectivo: classe.meta?.anoLectivo || "",
     estado: classe.meta?.estado || "",
   });
+
+  const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
+
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -50,7 +54,7 @@ function EditarStudent({ classe, onClose, onSave }) {
         professores: formData.professores.split(",").map((e) => e.trim()),
         disciplinas: formData.disciplinas.split(",").map((e) => e.trim()),
       },
-      responsavel: formData.responsavel, 
+      responsavel: formData.responsavel,
       meta: {
         anoLectivo: formData.anoLectivo,
         estado: formData.estado,
@@ -95,15 +99,21 @@ function EditarStudent({ classe, onClose, onSave }) {
             <div>
               <label className="text-sm text-slate-600">Classe</label>
               <div className="relative mt-1">
-                <Calendar className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
+                <div className="absolute left-3 top-3 w-5 h-5 text-slate-400 pointer-events-none">
+                  <Layers />
+                </div>
+
+                <select
                   name="classe"
                   value={formData.classe}
                   onChange={handleChange}
-                  placeholder="Classe"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
+                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+                >
+                  <option value="">Selecionar</option>
+                  <option value="1ª Ano"> 1ª Ano</option>
+                  <option value="2ª Ano"> 2ª Ano</option>
+                  <option value="3ª Ano"> 3ª Ano</option>
+                </select>
               </div>
             </div>
 
@@ -111,14 +121,16 @@ function EditarStudent({ classe, onClose, onSave }) {
               <label className="text-sm text-slate-600">Turno</label>
               <div className="relative mt-1">
                 <Clock className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
+                <select
                   name="turno"
                   value={formData.turno}
                   onChange={handleChange}
-                  placeholder="Turno"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
+                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+                >
+                  <option value="">Selecionar</option>
+                  <option value="manha">Manhã</option>
+                  <option value="tarde">Tarde</option>
+                </select>
               </div>
             </div>
 
@@ -126,59 +138,17 @@ function EditarStudent({ classe, onClose, onSave }) {
               <label className="text-sm text-slate-600">Sala</label>
               <div className="relative mt-1">
                 <Building className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
+                <select
                   name="sala"
                   value={formData.sala}
                   onChange={handleChange}
-                  placeholder="Sala"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm text-slate-600">Estudantes</label>
-              <div className="relative mt-1">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
-                  name="estudantes"
-                  value={formData.estudantes}
-                  onChange={handleChange}
-                  placeholder="std_001, std_002"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm text-slate-600">Professores</label>
-              <div className="relative mt-1">
-                <Phone className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
-                  name="professores"
-                  value={formData.professores}
-                  onChange={handleChange}
-                  placeholder="tch_001, tch_002"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm text-slate-600">Disciplinas</label>
-              <div className="relative mt-1">
-                <MapPin className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
-                  name="disciplinas"
-                  value={formData.disciplinas}
-                  onChange={handleChange}
-                  placeholder="sub_001, sub_002"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
+                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+                >
+                  <option value="">Selecionar</option>
+                  <option value="01"> Sala 01</option>
+                  <option value="02"> Sala 02</option>
+                  <option value="03"> Sala 03</option>
+                </select>
               </div>
             </div>
 
@@ -186,14 +156,19 @@ function EditarStudent({ classe, onClose, onSave }) {
               <label className="text-sm text-slate-600">Responsável</label>
               <div className="relative mt-1">
                 <Users className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
+                <select
                   name="responsavel"
                   value={formData.responsavel}
                   onChange={handleChange}
-                  placeholder="tch_001"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
+                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+                >
+                  <option value="">Selecionar</option>
+                  {teachersData.map((tch) => (
+                    <option key={tch.id} value={tch.id}>
+                      {tch.nome}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -216,14 +191,16 @@ function EditarStudent({ classe, onClose, onSave }) {
               <label className="text-sm text-slate-600">Estado</label>
               <div className="relative mt-1">
                 <Users className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
+                <select
                   name="estado"
                   value={formData.estado}
                   onChange={handleChange}
-                  placeholder="activa"
-                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-                />
+                  className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+                >
+                  <option value="">Selecionar</option>
+                  <option value="activo">Activo</option>
+                  <option value="desactivado">Desactivado</option>
+                </select>
               </div>
             </div>
           </div>

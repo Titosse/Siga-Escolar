@@ -11,12 +11,34 @@ import {
   VenusAndMars,
 } from "lucide-react";
 import { students as mockStudents } from "../../../Data/mockData";
+import { div } from "motion/react-client";
 
 function AdicionarTeacher() {
   const [students, setStudents] = useState(() => {
     const savedStudents = localStorage.getItem("students");
     return savedStudents ? JSON.parse(savedStudents) : mockStudents;
   });
+
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+
+  function showToast(message, type) {
+    setToast({
+      show: true,
+      message,
+      type,
+    });
+
+    setTimeout(() => {
+      setToast((prev) => ({
+        ...prev,
+        show: false,
+      }));
+    }, 3000);
+  }
 
   const [formData, setFormData] = useState({
     id: ``,
@@ -52,6 +74,18 @@ function AdicionarTeacher() {
     }));
   }
 
+  function handleEncarregadoChange(event) {
+    const { name, value } = event.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      encarregado: {
+        ...prev.encarregado,
+        [name]: value,
+      },
+    }));
+  }
+
   const classesData = JSON.parse(localStorage.getItem("classes")) || [];
   const turmas = classesData.map((cls) => ({
     id: cls.id,
@@ -80,7 +114,7 @@ function AdicionarTeacher() {
       !formData.encarregado.telefone.trim() ||
       !formData.encarregado.parentesco.trim()
     ) {
-      alert("Preencha todos os campos.");
+      showToast("Preencha todos os campos.", "insuccess");
       return;
     }
 
@@ -126,7 +160,7 @@ function AdicionarTeacher() {
       },
     });
 
-    alert("Estudante adicionado com sucesso.");
+    showToast("Estudante adicionado com sucesso.", "success");
   }
 
   return (
@@ -277,9 +311,9 @@ function AdicionarTeacher() {
                 <User className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
-                  name="nomeEncarregado"
-                  value={formData.nomeEncarregado}
-                  onChange={handleChange}
+                  name="nome"
+                  value={formData.encarregado.nome}
+                  onChange={handleEncarregadoChange}
                   placeholder="Nome do encarregado"
                   className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
                 />
@@ -292,9 +326,9 @@ function AdicionarTeacher() {
                 <Phone className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
-                  name="telefoneEncarregado"
-                  value={formData.telefoneEncarregado}
-                  onChange={handleChange}
+                  name="telefone"
+                  value={formData.encarregado.telefone}
+                  onChange={handleEncarregadoChange}
                   placeholder="Telefone"
                   className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
                 />
@@ -308,8 +342,8 @@ function AdicionarTeacher() {
                 <input
                   type="text"
                   name="parentesco"
-                  value={formData.parentesco}
-                  onChange={handleChange}
+                  value={formData.encarregado.parentesco}
+                  onChange={handleEncarregadoChange}
                   placeholder="Parentesco"
                   className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
                 />
@@ -345,6 +379,36 @@ function AdicionarTeacher() {
           ))}
         </div>
       </div>
+
+      {toast.show && (
+        <div className="fixed top-5 flex right-auto justify-center z-50 animate-bounce">
+          {toast.type === "success" ? (
+            <div className="px-5 py-4 rounded-2xl shadow-lg text-white flex items-center gap-3 bg-green-500">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                ✓
+              </div>
+
+              <div>
+                <h3 className="font-semibold">Sucesso</h3>
+
+                <p className="text-sm text-white/90">{toast.message}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="px-5 py-4 rounded-2xl shadow-lg text-white flex items-center gap-3 bg-red-500">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                X
+              </div>
+
+              <div>
+                <h3 className="font-semibold">Falhou</h3>
+
+                <p className="text-sm text-white/90">{toast.message}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

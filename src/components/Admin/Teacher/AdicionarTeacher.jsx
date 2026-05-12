@@ -239,7 +239,7 @@ function AdicionarTeacher({ onAddTeacher }) {
                 className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
               />
             </div>
-          </div>
+          </div> 
 
           <div>
             <label className="text-sm text-slate-600">Turma Responsavel</label>

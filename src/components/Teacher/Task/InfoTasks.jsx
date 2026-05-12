@@ -15,7 +15,7 @@ function VerTarefa({ tarefa, onClose }) {
         </button>
 
         <h2 className="text-2xl font-bold text-slate-800 mb-2">
-          {tarefa.titulo}
+          {tarefa.info.titulo}
         </h2>
         <p className="text-slate-500 mb-6">Detalhes completos da tarefa</p>
 
@@ -24,7 +24,7 @@ function VerTarefa({ tarefa, onClose }) {
             <p className="text-sm text-slate-500">Disciplina</p>
             <p className="font-semibold flex items-center gap-2">
               <BookOpen className="w-4 h-4" />
-              {tarefa.disciplina}
+              {tarefa.relacoes.disciplinaId}
             </p>
           </div>
 
@@ -32,7 +32,7 @@ function VerTarefa({ tarefa, onClose }) {
             <p className="text-sm text-slate-500">Turma</p>
             <p className="font-semibold flex items-center gap-2">
               <Users className="w-4 h-4" />
-              {tarefa.turma}
+              {tarefa.relacoes.turmaId}
             </p>
           </div>
 
@@ -40,7 +40,7 @@ function VerTarefa({ tarefa, onClose }) {
             <p className="text-sm text-slate-500">Prazo</p>
             <p className="font-semibold flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              {tarefa.prazo}
+              {tarefa.datas.prazo}
             </p>
           </div>
 
@@ -48,25 +48,25 @@ function VerTarefa({ tarefa, onClose }) {
             <p className="text-sm text-slate-500">Estado</p>
             <span
               className={`px-3 py-1 rounded-full text-sm ${
-                tarefa.estado === "activa"
+                tarefa.estado.situacao === "activa"
                   ? "bg-green-200 text-green-700"
                   : "bg-gray-200 text-gray-600"
               }`}
             >
-              {tarefa.estado}
+              {tarefa.estado.situacao}
             </span>
           </div>
         </div>
 
         <div className="mb-6">
           <p className="text-sm text-slate-500 mb-1">Descrição</p>
-          <p className="text-slate-700">{tarefa.descricao}</p>
+          <p className="text-slate-700">{tarefa.info.descricao}</p>
         </div>
 
         <div>
           <p className="text-sm text-slate-500 mb-1">Progresso</p>
           <p className="text-sm">
-            {tarefa.entregas} de {tarefa.total} entregaram
+             entregaram
           </p>
 
           <div className="w-full bg-slate-200 h-2 rounded-full mt-2">

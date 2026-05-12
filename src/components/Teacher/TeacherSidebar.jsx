@@ -17,16 +17,16 @@ function Sidebar() {
       path: `/teacher/tasks?nome=${nome}&categoria=${categoria}`,
     },
     {
+      name: "Conteudos",
+      path: `/teacher/subject?nome=${nome}&categoria=${categoria}`,
+    },
+    {
       name: "Presenças",
       path: `/teacher/attendance?nome=${nome}&categoria=${categoria}`,
     },
     {
       name: "Relatórios",
       path: `/teacher/relatorios?nome=${nome}&categoria=${categoria}`,
-    },
-     {
-      name: "Conteudos",
-      path: `/teacher/subject?nome=${nome}&categoria=${categoria}`,
     }
   ];
 

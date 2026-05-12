@@ -7,6 +7,7 @@ import {
   Search,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import AdicionarTarefa from "../../components/Teacher/Task/AdicionarTask";
 import VerTarefa from "../../components/Teacher/Task/InfoTasks";
 import EditarTarefa from "../../components/Teacher/Task/EditarTasks";
@@ -36,6 +37,38 @@ function TeacherTasks() {
     "Todas as disciplinas",
   );
 
+  const [searchParams] = useSearchParams();
+  const nome = searchParams.get("nome") || "";
+
+  const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
+  const classesData = JSON.parse(localStorage.getItem("classes")) || [];
+  const subjectsData = JSON.parse(localStorage.getItem("subjects")) || [];
+
+  const teacher = teachersData.find(
+    (tch) => tch.nome?.trim().toLowerCase() === nome.trim().toLowerCase(),
+  );
+
+  const subjectsTeacher = subjectsData.filter((subject) =>
+    subject.relacoes?.professores?.includes(teacher?.id),
+  );
+
+  function Turma(turmaId) {
+    const turmas = classesData.filter((turma) => turmaId.includes(turma.id));
+
+    if (turmas.length === 0) return "Sem turmas";
+
+    return turmas.map((turma) => turma.nome || "Sem nome").join(", ");
+  }
+
+  function disciplinasTurma(discId) {
+    const disciplinas = subjectsTeacher.filter((disc) => disc.id === discId);
+
+    console.log(disciplinas);
+    if (disciplinas.length === 0) return "Sem disciplina";
+
+    return disciplinas.map((disc) => disc.info?.nome || "Sem nome").join(", ");
+  }
+
   function handleRemoveTasks(id) {
     const updatedTasks = tasks.filter((task) => task.id !== id);
     setTasks(updatedTasks);
@@ -44,30 +77,35 @@ function TeacherTasks() {
   }
 
   const filteredTasks = tasks.filter((task) => {
-    const stutMacth = (task.estado || "")
+    const searchMatch = (task.info?.titulo || "")
       .toLowerCase()
       .includes(search.toLowerCase());
 
     const turmaMatch =
-      selectedTurma === "Todas as turmas" || task.turma === selectedTurma;
+      selectedTurma === "Todas as turmas" ||
+      task.relacoes?.turmaId === selectedTurma;
 
     const estadoMatch =
-      selectedEstado === "Todos" || task.estado === selectedEstado;
+      selectedEstado === "Todos" || task.estado?.situacao === "activa";
 
     const disciplinaMatch =
       selectedDisciplina === "Todas as disciplinas" ||
-      task.disciplina === selectedDisciplina;
+      task.relacoes?.disciplinaId === selectedDisciplina;
 
-    return stutMacth && turmaMatch && estadoMatch && disciplinaMatch;
+    return searchMatch && turmaMatch && estadoMatch && disciplinaMatch;
   });
 
   const totalTasks = tasks.length;
-  const activeTasks = tasks.filter((task) => task.estado === "Activa").length;
-  const pendingTasks = tasks.filter(
-    (task) => task.estado === "Pendente",
+  const activeTasks = tasks.filter(
+    (task) => task.estado?.situacao === "activa",
   ).length;
+
+  const pendingTasks = tasks.filter(
+    (task) => task.estado?.situacao === "pendente",
+  ).length;
+
   const completedTasks = tasks.filter(
-    (task) => task.estado === "Concluída",
+    (task) => task.estado?.situacao === "encerrada",
   ).length;
 
   const stats = [
@@ -144,8 +182,8 @@ function TeacherTasks() {
               </h1>
 
               <p className="text-slate-500 mt-2 text-center">
-                {taskToRemove.titulo} - {taskToRemove.turma} -{" "}
-                {taskToRemove.disciplina}
+                {taskToRemove.info.titulo} -{" "}
+                {disciplinasTurma(taskToRemove.relacoes.disciplinaId)}
               </p>
 
               <div className="space-x-4 py-6">
@@ -301,34 +339,34 @@ function TeacherTasks() {
                       <td className="py-4 px-4 text-slate-700">{task.id}</td>
 
                       <td className="py-4 px-4 font-medium text-slate-800 whitespace-nowrap">
-                        {task.titulo}
+                        {task.info?.titulo}{" "}
                       </td>
 
                       <td className="py-4 px-4 text-slate-700 whitespace-nowrap">
-                        {task.turma}
+                        {Turma(task.relacoes?.turmaId)}{" "}
                       </td>
 
                       <td className="py-4 px-4 text-slate-700 whitespace-nowrap">
-                        {task.disciplina}
+                        {disciplinasTurma(task.relacoes?.disciplinaId)}{" "}
                       </td>
 
                       <td className="py-4 px-4 text-slate-700 whitespace-nowrap">
-                        {task.prazo}
+                        {task.datas?.prazo}{" "}
                       </td>
 
                       <td className="py-4 px-4 whitespace-nowrap">
                         <span
                           className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            task.estado === "Activa"
+                            task.estado?.situacao === "activa"
                               ? "bg-green-100 text-green-700"
-                              : task.estado === "Pendente"
+                              : task.estado?.situacao === "pendente"
                                 ? "bg-yellow-100 text-yellow-700"
-                                : task.estado === "Encerrada"
+                                : task.estado?.situacao === "encerrada"
                                   ? "bg-red-100 text-red-700"
-                                  : "bg-purple-100 text-purple-700"
+                                  : "bg-slate-100 text-slate-700"
                           }`}
                         >
-                          {task.estado}
+                          {task.estado?.situacao}
                         </span>
                       </td>
 
@@ -376,29 +414,30 @@ function TeacherTasks() {
                   className="bg-slate-50 rounded-2xl p-4 border border-slate-200"
                 >
                   <h4 className="font-semibold text-slate-800">
-                    {task.titulo}
+                    {task.info.titulo}
                   </h4>
 
                   <p className="text-sm text-slate-500 mt-1">
-                    {task.turma} • {task.disciplina}
+                    {Turma(task.relacoes.turmaId)} •{" "}
+                    {disciplinasTurma(task.relacoes.disciplinaId)}
                   </p>
 
                   <p className="text-sm text-slate-500 mt-2">
-                    Prazo: {task.prazo}
+                    Prazo: {task.datas.prazo}
                   </p>
 
                   <span
                     className={`inline-block mt-3 px-3 py-1 rounded-full text-sm font-medium ${
-                      task.estado === "Activa"
+                      task.estado.situacao === "Activa"
                         ? "bg-green-100 text-green-700"
-                        : task.estado === "Pendente"
+                        : task.estado.situacao === "Pendente"
                           ? "bg-yellow-100 text-yellow-700"
-                          : task.estado === "Encerrada"
+                          : task.estado.situacao === "Encerrada"
                             ? "bg-red-100 text-red-700"
                             : "bg-purple-100 text-purple-700"
                     }`}
                   >
-                    {task.estado}
+                    {task.estado.situacao}
                   </span>
                 </div>
               ))}

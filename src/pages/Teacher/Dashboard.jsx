@@ -1,98 +1,157 @@
-import {
-  Users,
-  ClipboardList,
-  BookOpenCheck,
-  FilePenLine,
-  PlusSquare,
-  CheckCheck,
-} from "lucide-react";
+import { Users, ClipboardList, BookOpenCheck, FilePenLine } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import TurmaAcaoModal from "../../components/Teacher/Grades/TurmaAcaoModal";
 
 function TeacherDashboard() {
-  const [tasksData, setTasksData] = useState(
-    JSON.parse(localStorage.getItem("tasks")) || [],
-  );
+  const [searchParams] = useSearchParams();
+  const nome = searchParams.get("nome") || "";
 
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasksData));
-  }, [tasksData]);
+  const [selectedTurma, setSelectedTurma] = useState(null);
+
   const classesData = JSON.parse(localStorage.getItem("classes")) || [];
   const studentsData = JSON.parse(localStorage.getItem("students")) || [];
-  const teacherData = JSON.parse(localStorage.getItem("teachers")) || [];
+  const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
+  const gradesData = JSON.parse(localStorage.getItem("grades")) || [];
+  const subjectsData = JSON.parse(localStorage.getItem("subjects")) || [];
+  const tasksData = JSON.parse(localStorage.getItem("tasks")) || [];
 
-  const [searchParams] = useSearchParams();
-  const nome = searchParams.get("nome");
+  const teacher = teachersData.find(
+    (tch) => tch.nome?.trim().toLowerCase() === nome.trim().toLowerCase(),
+  );
 
-  const teacherAndSearchParams = teacherData.find((tch) => tch.nome.trim() === nome.trim());
+  const classesTeacher = classesData.filter((cls) =>
+    teacher?.turmaIds?.includes(cls.id),
+  );
 
-  const teacherAndClasses = teacherAndSearchParams
-    ? teacherAndSearchParams.turmaIds
-    : [];
+  const subjectsTeacher = subjectsData.filter((subject) =>
+    subject.relacoes?.professores?.includes(teacher?.id),
+  );
 
-    console.log("Dados do professor:", teacherAndSearchParams);
-    console.log("Turmas do professor:", teacherAndClasses);
-    console.log(nome)
+  const studentsTeacher = studentsData.filter((student) =>
+    teacher?.turmaIds?.includes(student.turmaId),
+  );
+
+  function totalStudentsTurma(turmaId) {
+    return studentsData.filter((student) => student.turmaId === turmaId).length;
+  }
+
+  function disciplinasTurma(turmaId) {
+    const disciplinas = subjectsTeacher.filter((subject) =>
+      subject.relacoes?.turmas?.includes(turmaId),
+    );
+
+    if (disciplinas.length === 0) return "Sem disciplina";
+
+    return disciplinas
+      .map((subject) => subject.info?.nome || "Sem nome")
+      .join(", ");
+  }
+
+  function notasPendentesTurma(turmaId) {
+    const studentsTurma = studentsData.filter(
+      (student) => student.turmaId === turmaId,
+    );
+
+    const subjectsTurma = subjectsTeacher.filter((subject) =>
+      subject.relacoes?.turmas?.includes(turmaId),
+    );
+
+    if (studentsTurma.length === 0 || subjectsTurma.length === 0) {
+      return 0;
+    }
+
+    let pendentes = 0;
+
+    studentsTurma.forEach((student) => {
+      subjectsTurma.forEach((subject) => {
+        const grade = gradesData.find(
+          (grade) =>
+            grade.relacoes?.studentId === student.id &&
+            grade.relacoes?.turmaId === turmaId &&
+            grade.relacoes?.disciplinaId === subject.id,
+        );
+
+        const notas = grade?.notas;
+
+        const completa =
+          notas?.teste1 !== "" &&
+          notas?.teste2 !== "" &&
+          notas?.trabalho !== "" &&
+          notas?.teste1 !== undefined &&
+          notas?.teste2 !== undefined &&
+          notas?.trabalho !== undefined;
+
+        if (!completa) {
+          pendentes += 1;
+        }
+      });
+    });
+
+    return pendentes;
+  }
+
+  const totalNotasPendentes = classesTeacher.reduce(
+    (total, turma) => total + notasPendentesTurma(turma.id),
+    0,
+  );
+
+  const tarefasDoProfessor = tasksData.filter(
+    (task) =>
+      task.relacoes.teacherId === teacher?.id ||
+      teacher?.turmaIds?.includes(task.relacoes.turmaId),
+  );
+
+  function Turma(turmaId) {
+    const turmas = classesData.filter((turma) => turmaId.includes(turma.id));
+
+    if (turmas.length === 0) return "Sem turmas";
+
+    return turmas.map((turma) => turma.nome || "Sem nome").join(", ");
+  }
+
+  console.log(tarefasDoProfessor);
+
   const stats = [
     {
       title: "Turmas",
-      value: teacherAndClasses.length,
+      value: classesTeacher.length,
       icon: BookOpenCheck,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
     },
     {
       title: "Estudantes",
-      value: studentsData.length,
+      value: studentsTeacher.length,
       icon: Users,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
     },
     {
       title: "Tarefas Activas",
-      value: tasksData.filter((task) => !task.completed).length,
+      value: tarefasDoProfessor.filter((task) => !task.completed).length,
       icon: ClipboardList,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
     },
     {
       title: "Notas Pendentes",
-      value: "12",
+      value: totalNotasPendentes,
       icon: FilePenLine,
       iconBg: "bg-orange-100",
       iconColor: "text-orange-600",
     },
   ];
 
-  const classes = [
-    {
-      turma: "8ª Classe A",
-      disciplina: "Matemática",
-      estudantes: 35,
-      proximaAula: "Hoje, 10:30",
-    },
-    {
-      turma: "9ª Classe B",
-      disciplina: "Matemática",
-      estudantes: 32,
-      proximaAula: "Hoje, 13:00",
-    },
-    {
-      turma: "10ª Classe A",
-      disciplina: "Matemática",
-      estudantes: 36,
-      proximaAula: "Amanhã, 08:00",
-    },
-  ];
-
   return (
-    <div className="w-full bg-slate-100">
+    <div className="w-full min-h-screen bg-slate-100">
       <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
-        <div className=" p-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="p-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-slate-800">
               Dashboard do Professor
             </h1>
+
             <p className="text-slate-800 mt-1">
               Gestão de notas, tarefas e acompanhamento das turmas
             </p>
@@ -130,6 +189,7 @@ function TeacherDashboard() {
             <h3 className="text-lg font-semibold text-slate-800 mb-4">
               Minhas Turmas
             </h3>
+
             <div className="overflow-x-auto">
               <table className="w-full min-w-[950px] border-collapse">
                 <thead>
@@ -137,123 +197,121 @@ function TeacherDashboard() {
                     <th className="py-3 px-4 text-slate-600">Turma</th>
                     <th className="py-3 px-4 text-slate-600">Disciplina</th>
                     <th className="py-3 px-4 text-slate-600">Estudantes</th>
-                    <th className="py-3 px-4 text-slate-600">Próxima Aula</th>
+                    <th className="py-3 px-4 text-slate-600">
+                      Notas Pendentes
+                    </th>
                     <th className="py-3 px-4 text-slate-600">Acção</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {classes.map((item, index) => (
+                  {classesTeacher.map((turma) => (
                     <tr
-                      key={index}
+                      key={turma.id}
                       className="border-b border-slate-100 hover:bg-slate-50 transition"
                     >
                       <td className="py-4 px-4 font-medium text-slate-800">
-                        {item.turma}
+                        {turma.info?.classe || "Sem classe"} -{" "}
+                        {turma.nome || turma.info?.nome || "Sem nome"}
                       </td>
+
                       <td className="py-4 px-4 text-slate-700">
-                        {item.disciplina}
+                        {disciplinasTurma(turma.id)}
                       </td>
+
                       <td className="py-4 px-4 text-slate-700">
-                        {item.estudantes}
+                        {totalStudentsTurma(turma.id)}
                       </td>
+
                       <td className="py-4 px-4 text-slate-700">
-                        {item.proximaAula}
+                        {notasPendentesTurma(turma.id)}
                       </td>
+
                       <td className="py-4 px-4">
-                        <button className="px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition">
+                        <button
+                          onClick={() => setSelectedTurma(turma)}
+                          className="px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition"
+                        >
                           Ver
                         </button>
                       </td>
                     </tr>
                   ))}
+
+                  {selectedTurma && (
+                    <TurmaAcaoModal
+                      turma={selectedTurma}
+                      onClose={() => setSelectedTurma(null)}
+                      studentsData={studentsData}
+                      subjectsData={subjectsData}
+                      gradesData={gradesData}
+                    />
+                  )}
+ 
+                  {classesTeacher.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="5"
+                        className="py-6 px-4 text-center text-slate-500"
+                      >
+                        Nenhuma turma ligada a este professor.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <section className="grid grid-cols-1 xl:grid-cols-1 gap-6">
           <div className="bg-white rounded-3xl shadow-sm p-5">
             <h3 className="text-lg font-semibold text-slate-800 mb-4">
               Tarefas Recentes
             </h3>
 
             <div className="space-y-4">
-              {tasksData.map((task, index) => (
+              {tarefasDoProfessor.map((task) => (
                 <div
-                  key={index}
+                  key={task.id}
                   className="bg-slate-50 rounded-2xl p-4 border border-slate-200"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h4 className="font-semibold text-slate-800">
-                        {task.titulo}
+                        {task.info.titulo || "Sem título"}
                       </h4>
+
                       <p className="text-sm text-slate-500 mt-1">
-                        {task.turma}
+                        Turmas: {Turma(task.relacoes.turmaId) || "N/A"}
                       </p>
+
                       <p className="text-sm text-slate-500 mt-1">
-                        Prazo: {task.prazo}
+                        Prazo: {task.datas.prazo || "Sem prazo"}
                       </p>
                     </div>
 
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        task.estado === "Activa"
+                        task.estado.situacao === "Activa" ||
+                        task.estado.situacao === "activo" ||
+                        !task.estado.completed
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
                       }`}
                     >
-                      {task.estado}
+                      {task.estado.situacao ||
+                        (task.estado.completed ? "Concluída" : "Activa")}
                     </span>
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
 
-          <div className="bg-white rounded-3xl shadow-sm p-5">
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">
-              Pendências de Notas
-            </h3>
-
-            <div className="space-y-4">
-              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-                <h4 className="font-semibold text-slate-800">
-                  8ª Classe A - Matemática
-                </h4>
-                <p className="text-sm text-slate-500 mt-1">
-                  5 estudantes sem nota lançada
+              {tarefasDoProfessor.length === 0 && (
+                <p className="text-sm text-slate-500">
+                  Nenhuma tarefa registada para este professor.
                 </p>
-                <button className="mt-4 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition">
-                  Lançar Agora
-                </button>
-              </div>
-
-              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-                <h4 className="font-semibold text-slate-800">
-                  9ª Classe B - Matemática
-                </h4>
-                <p className="text-sm text-slate-500 mt-1">
-                  3 estudantes com avaliação pendente
-                </p>
-                <button className="mt-4 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition">
-                  Ver Notas
-                </button>
-              </div>
-
-              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-                <h4 className="font-semibold text-slate-800">
-                  10ª Classe A - Matemática
-                </h4>
-                <p className="text-sm text-slate-500 mt-1">
-                  Todas as notas lançadas
-                </p>
-                <button className="mt-4 px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition">
-                  Ver Relatório
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </section>

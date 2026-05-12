@@ -24,6 +24,7 @@ function AddDisciplina({ onClose, onAddSubject }) {
     descricao: "",
     estado: "activo",
   });
+  const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -102,8 +103,6 @@ function AddDisciplina({ onClose, onAddSubject }) {
     onClose?.();
   }
 
-  const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
-
   return (
     <div className="min-h-screen p-4 md:p-6">
       <div className="bg-white rounded-2xl shadow-sm p-6 max-w-5xl mx-auto">
@@ -143,7 +142,6 @@ function AddDisciplina({ onClose, onAddSubject }) {
 
               <div>
                 <label className="text-sm text-slate-600">Classe</label>
-
                 <div className="relative mt-1">
                   <div className="absolute left-3 top-3 w-5 h-5 text-slate-400 pointer-events-none">
                     <Layers />
@@ -196,7 +194,6 @@ function AddDisciplina({ onClose, onAddSubject }) {
                   nome: teacher.nome,
                 }))}
               />
-
             </div>
           </div>
 

@@ -12,7 +12,7 @@ function Classes() {
 
   useEffect(() => {
     localStorage.setItem("classes", JSON.stringify(dados));
-  }, [dados]);
+  }, [dados]); 
 
   const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
   const studentsData = JSON.parse(localStorage.getItem("students")) || [];

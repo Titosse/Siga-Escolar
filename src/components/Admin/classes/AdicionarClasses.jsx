@@ -8,6 +8,7 @@ import {
   Users,
   Clock,
   Building,
+  Layers,
 } from "lucide-react";
 import { classes as mockClasses } from "../../../Data/mockData";
 
@@ -30,6 +31,8 @@ function AdicionarClasses() {
     estado: "",
   });
 
+  const teachersData = JSON.parse(localStorage.getItem("teachers")) || [];
+ 
   useEffect(() => {
     localStorage.setItem("classes", JSON.stringify(classes));
   }, [classes]);
@@ -54,7 +57,7 @@ function AdicionarClasses() {
       !formData.estudantes.trim() ||
       !formData.professores.trim() ||
       !formData.disciplinas.trim() ||
-      !formData.responsavel.trim() || 
+      !formData.responsavel.trim() ||
       !formData.anoLectivo.trim() ||
       !formData.estado.trim()
     ) {
@@ -62,7 +65,15 @@ function AdicionarClasses() {
       return;
     }
 
-    if (classes.some((cls) => cls.nome.toLowerCase().trim() === formData.nome.toLowerCase().trim() && cls.info.classe.toLowerCase().trim() === formData.classe.toLowerCase().trim())) {
+    if (
+      classes.some(
+        (cls) =>
+          cls.nome.toLowerCase().trim() ===
+            formData.nome.toLowerCase().trim() &&
+          cls.info.classe.toLowerCase().trim() ===
+            formData.classe.toLowerCase().trim(),
+      )
+    ) {
       alert("Já existe uma turma com este nome. Escolha outro nome.");
       return;
     }
@@ -92,7 +103,7 @@ function AdicionarClasses() {
       responsavel: formData.responsavel,
       meta: {
         anoLectivo: formData.anoLectivo,
-        estado: formData.estado,
+        estado: formData.estado || "activo",
       },
     };
 
@@ -138,15 +149,21 @@ function AdicionarClasses() {
           <div>
             <label className="text-sm text-slate-600">Classe</label>
             <div className="relative mt-1">
-              <Calendar className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
+              <div className="absolute left-3 top-3 w-5 h-5 text-slate-400 pointer-events-none">
+                <Layers />
+              </div>
+
+              <select
                 name="classe"
                 value={formData.classe}
                 onChange={handleChange}
-                placeholder="Classe"
-                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
+                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+              >
+                <option value="">Selecionar</option>
+                <option value="1ª Ano"> 1ª Ano</option>
+                <option value="2ª Ano"> 2ª Ano</option>
+                <option value="3ª Ano"> 3ª Ano</option>
+              </select>
             </div>
           </div>
 
@@ -154,14 +171,16 @@ function AdicionarClasses() {
             <label className="text-sm text-slate-600">Turno</label>
             <div className="relative mt-1">
               <Clock className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
+              <select
                 name="turno"
                 value={formData.turno}
                 onChange={handleChange}
-                placeholder="Turno"
-                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
+                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+              >
+                <option value="">Selecionar</option>
+                <option value="manha">Manhã</option>
+                <option value="tarde">Tarde</option>
+              </select>
             </div>
           </div>
 
@@ -169,14 +188,37 @@ function AdicionarClasses() {
             <label className="text-sm text-slate-600">Sala</label>
             <div className="relative mt-1">
               <Building className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
+              <select
                 name="sala"
                 value={formData.sala}
                 onChange={handleChange}
-                placeholder="Sala"
-                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
+                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+              >
+                <option value="">Selecionar</option>
+                <option value="01"> Sala 01</option>
+                <option value="02"> Sala 02</option>
+                <option value="03"> Sala 03</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm text-slate-600">Responsável</label>
+            <div className="relative mt-1">
+              <Users className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+              <select
+                name="responsavel"
+                value={formData.responsavel}
+                onChange={handleChange}
+                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400 bg-white"
+              >
+                <option value="">Selecionar</option>
+                {teachersData.map((tch) => (
+                  <option key={tch.id} value={tch.id}>
+                    {tch.nome}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -190,21 +232,6 @@ function AdicionarClasses() {
                 value={formData.anoLectivo}
                 onChange={handleChange}
                 placeholder="2026"
-                className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm text-slate-600">Estado</label>
-            <div className="relative mt-1">
-              <Users className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                name="estado"
-                value={formData.estado}
-                onChange={handleChange}
-                placeholder="activa"
                 className="w-full border border-slate-300 rounded-xl pl-10 pr-3 py-2 outline-none focus:ring-2 focus:ring-slate-400"
               />
             </div>
